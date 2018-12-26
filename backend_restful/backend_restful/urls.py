@@ -16,8 +16,10 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 from hello_world.views import hello_world
+from helloworld2.views import hello_world2
 
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('hello/',hello_world,name='hello_world'),
+    path('hello2/',hello_world2,name='hello_world2'),
 ]
