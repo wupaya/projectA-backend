@@ -15,7 +15,8 @@ Including another URLconf
 """
 from django.contrib import admin
 from django.urls import path
-from hello_world.views import hello_world
+from backend_restful.views import hello_world
+from backend_restful.views import hello_world2
 from helloworld2.views import hello_world2
 
 urlpatterns = [
