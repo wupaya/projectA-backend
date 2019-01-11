@@ -1,25 +1,15 @@
-"""backend_restful URL Configuration
+from django.conf.urls import url
+from rest_framework import routers
+from .views import HelloView, Hello2View, NiceUrlParamView, ValidateParamView
 
-The `urlpatterns` list routes URLs to views. For more information please see:
-    https://docs.djangoproject.com/en/2.1/topics/http/urls/
-Examples:
-Function views
-    1. Add an import:  from my_app import views
-    2. Add a URL to urlpatterns:  path('', views.home, name='home')
-Class-based views
-    1. Add an import:  from other_app.views import Home
-    2. Add a URL to urlpatterns:  path('', Home.as_view(), name='home')
-Including another URLconf
-    1. Import the include() function: from django.urls import include, path
-    2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
-from django.contrib import admin
-from django.urls import path
-from backend_restful.views import hello_world
-from backend_restful.views import hello_world2
+#use router if you don't want to make url using regular expression like urlpatterns
+router = routers.DefaultRouter(trailing_slash = False)
+
+
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
-    path('hello/',hello_world,name='hello_world'),
-    path('hello2/',hello_world2,name='hello_world2'),
+    url(r'hello', HelloView.as_view()), #using serializer
+    url(r'hella', Hello2View.as_view()), #just using response method
+    url(r'^abc/(?P<pk>\d+)/$', NiceUrlParamView.as_view()), #just using response method
+    url(r'^param/$', ValidateParamView.as_view()), #just using response method
 ]
