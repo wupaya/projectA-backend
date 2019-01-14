@@ -10,3 +10,12 @@ class HelloMessageSerializer(serializers.Serializer):
     message = serializers.CharField(required=True, max_length=200)
 	# def create(self, validated_data):
 		# return HelloParam.objects.create(**validated_data)
+		
+class SignUpInputDataSerializer(serializers.Serializer):
+	email = serializers.CharField(required=True)
+	password = serializers.CharField(required=True)
+	phone_no = serializers.CharField(required=True)
+	address = serializers.CharField(required=True)
+	sex = serializers.CharField(required=True)
+	profession = serializers.CharField(required=True)
+	date_of_birth = serializers.CharField(required=True)

@@ -12,4 +12,5 @@ urlpatterns = [
     url(r'hella', Hello2View.as_view()), #just using response method
     url(r'^abc/(?P<pk>\d+)/$', NiceUrlParamView.as_view()), #just using response method
     url(r'^param/$', ValidateParamView.as_view()), #just using response method
+    url(r'^signup/$', ValidateParamView.as_view()), #just using response method
 ]

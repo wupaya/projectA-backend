@@ -1,7 +1,7 @@
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import HelloSerializer, HelloParamSerializer, HelloMessageSerializer
+from .serializers import HelloSerializer, HelloParamSerializer, HelloMessageSerializer, SignUpInputDataSerializer
 from .my_app import Hello, HelloParam
 	
 	
@@ -38,3 +38,13 @@ class ValidateParamView(APIView):
           helloparamobject = HelloParam(serializer.validated_data.get('param1'),serializer.validated_data.get('param2'))
           return Response(HelloMessageSerializer(helloparamobject).data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+		
+class SignUpView(APIView):
+
+	def post(self, request):
+		sign_up_input_serializer = SignUpInputDataSerializer(request.data)
+		
+		if sign_up_input_serializer.is_valid():
+			#process signup data here
+			pass
+		return Response(sign_up_input_serializer.errors, status.HTTP_400_BAD_REQUEST)
