@@ -1,9 +1,23 @@
-
-
-class Hello(object):
-    def __init__(self, name=None):
-        self.greetings = 'Hi ' + str(name)
-		
-class HelloParam(object):
-    def __init__(self, param1, param2):
-        self.message = param1 + ' ' + param2
+        
+class SignupRequest(object):
+    user_email = None
+    user_full_name = None
+    user_sex = None
+    user_phone_no = None
+    request_created_date = None
+    request_is_accepted = None
+    request_is_email_verified = None
+    request_is_phone_no_verified = None
+    
+    def __init__(self):
+        pass
+        
+    def accept(self):
+        self.isAccepted = True
+    
+    def reject(self):
+        self.isAccepted = False
+        
+    def process_data(self, data_from_source):
+        #do some processing
+        return data_from_source
