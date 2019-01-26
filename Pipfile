@@ -15,6 +15,3 @@ virtualenv = "==16.3.0"
 virtualenv-clone = "==0.5.1"
 Markdown = "==3.0.1"
 django = "*"
-
-[requires]
-python_version = "3.6"
