@@ -1,7 +1,20 @@
-This document describe how contribute to this project.
+Welcome
+
+This is the backend component of the test project.
+
+This component process data from user and store to database and query database for information requested by user.
+
+This component implements a web service using Representational State Transfer (REST) technology.
+
+Programming Language: Python
+
+Core Rest Framework: Django
+https://www.django-rest-framework.org/
 
 
-How to setup environment:
+
+The following guide describe how to setup environment to contribute to this component.
+
 -----------------------------------------
 step - 1:
 Download and install lasted python version.
