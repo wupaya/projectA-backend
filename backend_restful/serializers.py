@@ -21,3 +21,5 @@ class SignUpInputDataSerializer(serializers.Serializer):
     def save(self):
         #save to database
         pass
+class SubSerializer(serializers.Serializer):
+    message = 'Hello Sub'
