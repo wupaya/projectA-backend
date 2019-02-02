@@ -75,7 +75,7 @@ class ValidateParamView(APIView):
           return Response(HelloMessageSerializer(helloparamobject).data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 		
-class SignUpView(APIView):
+class SignView(APIView):
     '''
     **Title**
     ----
@@ -142,3 +142,11 @@ class SignUpView(APIView):
             sign_up_input_serializer.save()
             pass
         return Response(sign_up_input_serializer.errors, status.HTTP_400_BAD_REQUEST)
+class SubView(APIView):
+       
+	def get(self,request):
+	    serializer = SubSerializer(data=request.data)
+		return Response(serializer.data, status.HTTP_200_OK)
+	def post(self, request):
+	    Serializer = SubSerializer(data=request.data)
+		return Response(serializer.data, status.HTTP_200_OK)
