@@ -21,3 +21,5 @@ class SignUpInputDataSerializer(serializers.Serializer):
     def save(self):
         #save to database
         pass
+class SumSerializer(serializers.serializer):
+	     message = 'Hello Sum'
