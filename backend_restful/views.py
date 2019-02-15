@@ -1,9 +1,9 @@
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializers import SignUpInputDataSerializer
-		
-		
+from .serializers import SignUpInputDataSerializer, SubSerializer
+from .my_app import Sub
+        
 class ValidateParamView(APIView):
     '''
     **Show User**
@@ -67,15 +67,15 @@ class ValidateParamView(APIView):
           }
         });
         ```
-	'''
+    '''
     def post(self, request, pk=None):
         serializer = HelloParamSerializer(data=request.data)
         if serializer.is_valid():
           helloparamobject = HelloParam(serializer.validated_data.get('param1'),serializer.validated_data.get('param2'))
           return Response(HelloMessageSerializer(helloparamobject).data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-		
-class SignView(APIView):
+        
+class SignUpView(APIView):
     '''
     **Title**
     ----
@@ -138,15 +138,15 @@ class SignView(APIView):
         sign_up_input_serializer = SignUpInputDataSerializer(data=request.data)
         
         if sign_up_input_serializer.is_valid():
-			#process signup data here
+            #process signup data here
             sign_up_input_serializer.save()
             pass
         return Response(sign_up_input_serializer.errors, status.HTTP_400_BAD_REQUEST)
 class SubView(APIView):
        
-	def get(self,request):
-	    serializer = SubSerializer(data=request.data)
-		return Response(serializer.data, status.HTTP_200_OK)
-	def post(self, request):
-	    Serializer = SubSerializer(data=request.data)
-		return Response(serializer.data, status.HTTP_200_OK)
+    def get(self,request):
+        serializer = SubSerializer(Sub())
+        return Response(serializer.data, status.HTTP_200_OK)
+    def post(self, request):
+        serializer = SubSerializer(Sub())
+        return Response(serializer.data, status.HTTP_200_OK)

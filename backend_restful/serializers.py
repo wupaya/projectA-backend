@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from .my_app import SignupRequest
-		
+        
 class SignUpInputDataSerializer(serializers.Serializer):
     email = serializers.CharField(required=True)
     password = serializers.CharField(required=True)
@@ -22,4 +22,4 @@ class SignUpInputDataSerializer(serializers.Serializer):
         #save to database
         pass
 class SubSerializer(serializers.Serializer):
-    message = 'Hello Sub'
+    message = serializers.CharField()

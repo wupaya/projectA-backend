@@ -21,3 +21,8 @@ class SignupRequest(object):
     def process_data(self, data_from_source):
         #do some processing
         return data_from_source
+		
+class Sub(object):
+    num1 = None
+    num2 = None
+    message = "hello Sub"
