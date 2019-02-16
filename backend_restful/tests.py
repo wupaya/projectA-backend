@@ -14,19 +14,19 @@ class SignUpEnpointTest(APITestCase):
     def test_create_account(self):
         """
         Ensure we can create a new account object.
-		email = serializers.CharField(required=True)
-		password = serializers.CharField(required=True)
-		phone_no = serializers.CharField(required=True)
-		address = serializers.CharField(required=True)
-		sex = serializers.CharField(required=True)
-		profession = serializers.CharField(required=True)
-		date_of_birth = serializers.CharField(required=True)
+        email = serializers.CharField(required=True)
+        password = serializers.CharField(required=True)
+        phone_no = serializers.CharField(required=True)
+        address = serializers.CharField(required=True)
+        sex = serializers.CharField(required=True)
+        profession = serializers.CharField(required=True)
+        date_of_birth = serializers.CharField(required=True)
         """
         url = reverse('signup')
         data = {
-			'email': 'DabApps',	
-			'password': 'DabApps'
-		}
+            'email': 'DabApps', 
+            'password': 'DabApps'
+        }
         response = self.client.post(url, data, format='json')
         self.assertEqual(response.status_code, status.HTTP_400_BAD_REQUEST)
         # self.assertEqual(response.data, data)
