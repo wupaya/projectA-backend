@@ -1,3 +1,3 @@
 from rest_framework import serializers
-class SubSerializer(serializers.serializer):
+class NoyonSerializer(serializers.Serializer):
     message = serializers.charField()
