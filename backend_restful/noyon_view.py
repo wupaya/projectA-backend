@@ -5,10 +5,12 @@ from .noyon import Noyon
 from .noyon import Noyon2
 from .noyon import Noyon3
 from .noyon import Noyon4
+from .noyon import Noyon5
 from .noyon_serializer import NoyonSerializer
 from .noyon_serializer import Noyon2Serializer
 from .noyon_serializer import Noyon3Serializer
 from .noyon_serializer import Noyon4Serializer
+from .noyon_serializer import Noyon5Serializer
 
 class NoyonView(APIView):
     def get(self,request):
@@ -40,4 +42,12 @@ class Noyon4View(APIView):
         return Response (serializer.data, status.HTTP_200_OK)
     def post(self, request):
         serializer = Noyon4Serializer(Noyon4())
+        return Response (serializer.data, status.HTTP_200_OK)
+        
+class Noyon5View(APIView):
+    def get(self,request):
+        serializer = Noyon5Serializer(Noyon5())
+        return Response (serializer.data, status.HTTP_200_OK)
+    def post(self, request):
+        serializer = Noyon5Serializer(Noyon5())
         return Response (serializer.data, status.HTTP_200_OK)
