@@ -11,3 +11,5 @@ class Noyon3Serializer(serializers.Serializer):
 class Noyon4Serializer(serializers.Serializer):
     greetings = serializers.CharField()
 
+class Noyon5Serializer(serializers.Serializer):
+    greetings = serializers.CharField()

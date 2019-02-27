@@ -9,3 +9,6 @@ class Noyon3(object):
     
 class Noyon4(object):
     greetings = "Hey, i'm Noyon, What's up?"
+    
+class Noyon5(object):
+    greetings = "Hey, i'm Noyon, How can i help you?"
