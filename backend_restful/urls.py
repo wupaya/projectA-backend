@@ -11,5 +11,6 @@ urlpatterns = [
     url(r'^signup/$', SignUpView.as_view(), name='signup'), #just using response method
      url(r'^sub/$', SubView.as_view(), name='sub'), #just using response method
      url(r'^', include('backend_restful.noyon_urls')), #just using response method
+    url(r'^', include('backend_restful.hassan_urls')), #just using response method
      
 ]
