@@ -13,4 +13,5 @@ urlpatterns = [
      url(r'^', include('backend_restful.noyon_urls')), #just using response method
     url(r'^', include('backend_restful.hassan_urls')), #just using response method
      
+     url(r'^proton/$', ProtonView.as_view(), name='proton'), #just using response method
 ]
