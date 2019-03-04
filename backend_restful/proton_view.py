@@ -17,7 +17,7 @@ class ProtonView(APIView):
         serializer = ProtonSerializer(Proton())
         return Response (serializer.data, status.HTTP_200_OK)
     def post(self, request):
-        serializer = ProtonSerializer(Noyon())
+        serializer = ProtonSerializer(Proton())
         return Response (serializer.data, status.HTTP_200_OK)
         
 class Proton2View(APIView):
