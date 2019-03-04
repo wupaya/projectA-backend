@@ -12,5 +12,5 @@ urlpatterns = [
     url(r'^signup/$', SignUpView.as_view(), name='signup'), #just using response method
      url(r'^sub/$', SubView.as_view(), name='sub'), #just using response method
      url(r'^noyon/$', NoyonView.as_view(), name='noyon'), #just using response method
-     
+     url(r'^proton/$', ProtonView.as_view(), name='proton'), #just using response method
 ]
