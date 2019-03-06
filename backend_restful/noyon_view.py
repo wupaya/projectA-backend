@@ -13,6 +13,26 @@ from .noyon_serializer import Noyon4Serializer
 from .noyon_serializer import Noyon5Serializer
 
 class NoyonView(APIView):
+    '''
+    **Name**
+    ----
+      _Hey, I am Mahfujar Rahman Noyon._
+ 
+    **Education**
+    ----
+    * **University/College: **
+      _Rangpur Engineering College._
+
+    * **Department**
+      _Computer Science of Engineering_
+
+    * **Batch**
+      _1st Batch_
+    
+    * **Session**
+      _2016-17_
+
+    '''
     def get(self,request):
         serializer = NoyonSerializer(Noyon())
         return Response (serializer.data, status.HTTP_200_OK)

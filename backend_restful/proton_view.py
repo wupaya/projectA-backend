@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .proton import Proton
-from .proton import proton2
+from .proton import Proton2
 from .proton import Proton3
 from .proton import Proton4
 from .proton import Proton5
