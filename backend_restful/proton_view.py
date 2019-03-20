@@ -12,8 +12,9 @@ from .proton_serializer import Proton3Serializer
 from .proton_serializer import Proton4Serializer
 from .proton_serializer import Proton5Serializer
 
-class ProtonView(APIView):
-    def get(self,request):
+class ProtonView(APIView): 
+   
+    def get(self, request):
         serializer = ProtonSerializer(Proton())
         return Response (serializer.data, status.HTTP_200_OK)
     def post(self, request):
