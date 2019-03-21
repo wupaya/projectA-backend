@@ -39,7 +39,7 @@ class Proton3View(APIView):
 
 class Proton4View(APIView):
     def get(self,request):
-        serializer = proton4Serializer(Proton4())
+        serializer = Proton4Serializer(Proton4())
         return Response (serializer.data, status.HTTP_200_OK)
     def post(self, request):
         serializer = Proton4Serializer(Proton4())
