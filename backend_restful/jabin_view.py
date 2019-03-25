@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .jabin import Jabin,jabin2
-from .jabin_serializer import JabinSerializer
+from .jabin_serializer import JabinSerializer,jabinSerializer2
 
 class JabinView(APIView):
     def get(self,request):
