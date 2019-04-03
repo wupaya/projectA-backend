@@ -64,6 +64,11 @@ class RatonView(APIView):
 
       <_This is where all uncertainties, commentary, discussion etc. can go. I recommend timestamping and identifying oneself when leaving comments here._> 
     '''
-        
+    def get(self,request):
+        serializer = RatonSerializer(Raton())
+        return Response (serializer.data, status.HTTP_200_OK)
+    def post(self, request):
+        serializer = RatonSerializer(Raton())
+        return Response (serializer.data, status.HTTP_200_OK)        
         
         
