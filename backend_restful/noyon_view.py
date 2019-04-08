@@ -6,11 +6,14 @@ from .noyon import Noyon2
 from .noyon import Noyon3
 from .noyon import Noyon4
 from .noyon import Noyon5
+from .noyon import NoyonIO
 from .noyon_serializer import NoyonSerializer
 from .noyon_serializer import Noyon2Serializer
 from .noyon_serializer import Noyon3Serializer
 from .noyon_serializer import Noyon4Serializer
 from .noyon_serializer import Noyon5Serializer
+from .noyon_serializer import NoyonParameterInput
+from .noyon_serializer import NoyonParameterOutput
 
 class NoyonView(APIView):
     '''
@@ -401,3 +404,12 @@ class NoyonParamView(APIView):
         return Response ({"Message":your_message}, status.HTTP_200_OK)
     def post(self, request, your_message):
         return Response ({"Message":your_message}, status.HTTP_200_OK)
+        
+class NoyonIOView(APIView):
+    def get(self,request):
+        serializer = NoyonParameterInput(request.data)
+        if serializer.is_valid():
+            nio = NoyonIO()
+            nio.give_me_sum(serializer.validated_data.get('num1'),serializer.validated_data.get('num2'))
+            return Response(NoyonParameterOutput(nio).data, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
