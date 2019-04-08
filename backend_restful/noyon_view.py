@@ -406,8 +406,8 @@ class NoyonParamView(APIView):
         return Response ({"Message":your_message}, status.HTTP_200_OK)
         
 class NoyonIOView(APIView):
-    def get(self,request):
-        serializer = NoyonParameterInput(request.data)
+    def post(self,request):
+        serializer = NoyonParameterInput(data=request.data)
         if serializer.is_valid():
             nio = NoyonIO()
             nio.give_me_sum(serializer.validated_data.get('num1'),serializer.validated_data.get('num2'))
