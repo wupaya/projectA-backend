@@ -13,3 +13,11 @@ class Noyon4Serializer(serializers.Serializer):
 
 class Noyon5Serializer(serializers.Serializer):
     greetings = serializers.CharField()
+    
+    
+class NoyonParameterInput(serializers.Serializer):
+    num1 = serializers.IntegerField()
+    num2 = serializers.IntegerField()
+    
+class NoyonParameterOutput(serializers.Serializer):
+    sum = serializers.IntegerField()
