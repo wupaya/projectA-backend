@@ -1,8 +1,8 @@
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .jabin import Jabin,Jabin2,Jabin3
-from .jabin_serializer import JabinSerializer,JabinSerializer2,JabinSerializer3
+from .jabin import Jabin,Jabin2,Jabin3,Jabin4
+from .jabin_serializer import JabinSerializer,JabinSerializer2,JabinSerializer3,JabinSerializer4
 
 class JabinView(APIView):
     def get(self,request):
@@ -24,4 +24,11 @@ class JabinView3(APIView):
         return Response (serializer.data,status.HTTP_200_OK)
     def post(self,request):
         serializer = JabinSerializer3(Jabin3())
+        return Response (serializer.data,status.HTTP_200_OK)
+class JabinView4(APIView):
+    def get(self,request):
+        serializer = JabinSerializer4(Jabin4())
+        return Response (serializer.data,status.HTTP_200_OK)
+    def post(self,request):
+        serializer = JabinSerializer4(Jabin4())
         return Response (serializer.data,status.HTTP_200_OK)
