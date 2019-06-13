@@ -425,3 +425,19 @@ class NoyonIOView(APIView):
             nio.sum = nio.give_me_sum(serializer.validated_data.get('num1'),serializer.validated_data.get('num2'))
             return Response(NoyonParameterOutput(nio).data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
+class Search(APIView):
+    '''need password'''
+    pass
+
+class Login(APIView):
+    '''need password'''
+    pass
+
+class Registration(APIView):
+    '''need password'''
+    pass
+
+class PublicPages(APIView):
+    '''need password'''
+    pass
