@@ -30,7 +30,13 @@ class Registration(object):
     user_id = ""
     registration-date = ""
     email_activation_status = ""
+    
 class PublicPage(object):
     page_id = ""
     page_title = ""
     page_publish_status = ""
+    
+class Session(object):
+    ueer_id = ""
+    session_id = ""
+    expired_date_time = ""
