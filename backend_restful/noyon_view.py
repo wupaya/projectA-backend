@@ -409,13 +409,14 @@ class NoyonIOView(APIView):
     def get(self,request):
         #serializer = NoyonParameterInput(data=request.data)
         #if serializer.is_valid():
-        nio = NoyonIO()
-        num1 = request.query_params.get('num1')
-        num2 = request.query_params.get('num2')
+        
+        num1 = request.query_params.get('num1', None)
+        num2 = request.query_params.get('num2', None)
+        nio = NoyonIO.give_me_sum(num1,num2)
         if num1 is not None and num1.isnumeric() and num2 is not None and num2.isnumeric():
-            nio.sum = nio.give_me_sum(int(num1),int(num2))
-            return Response(NoyonParameterOutput(nio).data, status=status.HTTP_201_CREATED)
-        return Response({"error":"Something went wrong"},status=status.HTTP_400_BAD_REQUEST)
+            #nio = NoyonIO.filter(give_me_sum(int(num1),int(num2))
+            nio = nio.filter(num1+num2)
+        return nio
         
     def post(self,request):
         serializer = NoyonParameterInput(data=request.data)

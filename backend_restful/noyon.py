@@ -15,5 +15,22 @@ class Noyon5(object):
 
 class NoyonIO(object):
     sum = ""
-    def give_me_sum(self, num1,num2):
+    def give_me_sum(num1,num2):
         return num1+num2
+
+class User(object):
+    email = ""
+    password = ""
+    user_name = ""
+    user_id = ""
+    name = ""
+    phone_no = ""'
+
+class Registration(object):
+    user_id = ""
+    registration-date = ""
+    email_activation_status = ""
+class PublicPage(object):
+    page_id = ""
+    page_title = ""
+    page_publish_status = ""
