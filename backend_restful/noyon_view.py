@@ -437,19 +437,21 @@ class Login(APIView):
     pass
 
 class Registration(APIView):
-    def get(self,request):
+    def get(self, request):
         serializer = RegistrationSerializer(data=request.data)
         user = User()
-        if serializer.is_valid():
-            user.email = "example@domain.com"
-            user.password = "password12@#"
-            user.username = "name123"
-            user.name = "Mr. Name"
-            user.phone_no = "+1847439202"
-        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+        #suppose u read the following data from database and u assign them to the user object
+        user.email = "example@domain.com"
+        user.password = "password12@#"
+        user.username = "name123"
+        user.name = "Mr. Name"
+        user.phone_no = "+1847439202"
+        return Response(RegistrationSerializer(user).data, status=status.HTTP_201_CREATED)
     
     def post(self,request):
         serializer = RegistrationSerializer(data=request.data)
+        if serializer.is_valid():
+            user = User()
     
     
     
