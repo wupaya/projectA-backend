@@ -451,8 +451,10 @@ class Registration(APIView):
     def post(self,request):
         serializer = RegistrationSerializer(data=request.data)
         if serializer.is_valid():
-            user = User()
-    
+            #user = User()
+            #TODO store data in database
+            return Response ({"Registratiion Successfull"}, status.HTTP_200_OK)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
     
     
     '''need password'''
