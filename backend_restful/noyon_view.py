@@ -441,11 +441,12 @@ class Registration(APIView):
         serializer = RegistrationSerializer(data=request.data)
         user = User()
         if serializer.is_valid():
-            email = "example@domain.com"
-            password = "password12@#"
-            username = "name123"
-            name = "Mr. Name"
-            phone_no = "+1847439202"
+            user.email = "example@domain.com"
+            user.password = "password12@#"
+            user.username = "name123"
+            user.name = "Mr. Name"
+            user.phone_no = "+1847439202"
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
     
     def post(self,request):
         serializer = RegistrationSerializer(data=request.data)
