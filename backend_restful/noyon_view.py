@@ -7,6 +7,7 @@ from .noyon import Noyon3
 from .noyon import Noyon4
 from .noyon import Noyon5
 from .noyon import NoyonIO
+from .noyon import User
 from .noyon_serializer import NoyonSerializer
 from .noyon_serializer import Noyon2Serializer
 from .noyon_serializer import Noyon3Serializer
@@ -14,6 +15,7 @@ from .noyon_serializer import Noyon4Serializer
 from .noyon_serializer import Noyon5Serializer
 from .noyon_serializer import NoyonParameterInput
 from .noyon_serializer import NoyonParameterOutput
+from .noyon_serializer import RegistrationSerializer
 
 class NoyonView(APIView):
     '''
@@ -435,6 +437,21 @@ class Login(APIView):
     pass
 
 class Registration(APIView):
+    def get(self,request):
+        serializer = RegistrationSerializer(data=request.data)
+        user = User()
+        if serializer.is_valid():
+            email = "example@domain.com"
+            password = "password12@#"
+            username = "name123"
+            name = "Mr. Name"
+            phone_no = "+1847439202"
+    
+    def post(self,request):
+        serializer = RegistrationSerializer(data=request.data)
+    
+    
+    
     '''need password'''
     pass
 
