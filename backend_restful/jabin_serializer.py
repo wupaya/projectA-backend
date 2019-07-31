@@ -7,3 +7,6 @@ class JabinSerializer3(serializers.Serializer):
   greetings = serializers.CharField()
 class JabinSerializer4(serializers.Serializer):
   greetings = serializers.CharField()
+class JabinSerializer5(serializers.Serializer):
+  greetings = serializers.CharField()
+  
