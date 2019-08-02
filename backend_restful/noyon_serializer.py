@@ -21,3 +21,10 @@ class NoyonParameterInput(serializers.Serializer):
     
 class NoyonParameterOutput(serializers.Serializer):
     sum = serializers.IntegerField()
+
+class RegistrationSerializer(serializers.Serializer):
+    email = serializers.EmailField()
+    password = serializers.CharField(style={'input_type': 'password'})
+    username = serializers.CharField()
+    name = serializers.CharField()
+    phone_no = serializers.CharField()
