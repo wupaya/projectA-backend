@@ -25,7 +25,6 @@ class User(object):
     user_id = ""
     name = ""
     phone_no = ""
->>>>>>> fdc678bc36af3c1a4d79d8e8a0f10a16c17857d6
 
 class Registration(object):
     user_id = ""
