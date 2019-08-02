@@ -28,7 +28,7 @@ class User(object):
 
 class Registration(object):
     user_id = ""
-    registration-date = ""
+    registration_date = ""
     email_activation_status = ""
     
 class PublicPage(object):
