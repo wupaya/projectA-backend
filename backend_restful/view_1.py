@@ -1,7 +1,14 @@
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from .serializer_1 import RegistrationSerializer, LoginInputSerializer, PublicPageSerializer
+import pymongo
+from rest_framework.parsers import JSONParser
+from rest_framework.renderers import JSONRenderer
+import json
+from bson import json_util
 
+mongodb_url = "mongodb+srv://anamika:1234@cluster0-t3qae.mongodb.net/test?retryWrites=true"
 
 class login(APIView):
     '''
@@ -73,9 +80,32 @@ class login(APIView):
         
         return Response (serializer.data, status.HTTP_200_OK)
     
-    def post(self, request):
-        serializer = NoyonSerializer(Noyon())
-        return Response (serializer.data, status.HTTP_200_OK)
+    def post(self, request, format=None):
+        #validate input data with serializer
+        serializer = LoginInputSerializer(data=request.data)        
+        #store in database
+        if serializer.is_valid():
+            #serializer data for database
+            #database instance
+            client = pymongo.MongoClient(mongodb_url)
+            db = client.test
+            users = db.users
+            
+            #query if already exist 
+            found_user = users.find_one({"$and":[{"email": serializer.validated_data.get("email")},{"password": serializer.validated_data.get("password")}]})
+            if(found_user is not None):
+                login_object = {"token": "j2lj3j092j03j2roi3jij",
+                "expired":"3-2-2020"}
+                sessions = db.sessions
+                session = sessions.insert_one(login_object)
+                
+                return Response({"status_code":"login_successfull",
+    "default_description":"successfully registered", "data": str(login_object)}, status=status.HTTP_201_CREATED)
+            else:
+                return Response({"status_code":"login_failed",
+    "default_description":"user not found"}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
         
 class services(APIView):
     '''
@@ -147,7 +177,7 @@ class services(APIView):
         serializer = Noyon2Serializer(Noyon2())
         return Response (serializer.data, status.HTTP_200_OK)
         
-class registrater(APIView):
+class register(APIView):
     '''
     **Show Noyon2View**
     ----
@@ -207,11 +237,31 @@ class registrater(APIView):
       <_This is where all uncertainties, commentary, discussion etc. can go. I recommend timestamping and identifying oneself when leaving comments here._> 
     '''
     def get(self,request):
-        serializer = Noyon3Serializer(Noyon3())
-        return Response (serializer.data, status.HTTP_200_OK)
-    def post(self, request):
-        serializer = Noyon3Serializer(Noyon3())
-        return Response (serializer.data, status.HTTP_200_OK)
+        #serializer = Noyon3Serializer(Noyon3())
+        return Response ({}, status.HTTP_200_OK)
+    def post(self, request, format=None):
+        #validate input data with serializer
+        serializer = RegistrationSerializer(data=request.data)        
+        #store in database
+        if serializer.is_valid():
+            #serializer data for database
+            #database instance
+            client = pymongo.MongoClient(mongodb_url)
+            db = client.test
+            users = db.users
+            
+            #query if already exist 
+            found_user = users.find_one({"email": serializer.validated_data.get("email")})
+            if(found_user is None):            
+                post_id = users.insert_one(serializer.validated_data).inserted_id
+                
+                return Response({"status_code":"registration_successfull",
+    "default_description":"successfully registered", "id": str(post_id)}, status=status.HTTP_201_CREATED)
+            else:
+                return Response({"status_code":"registration_failed",
+    "default_description":"already registered", "id": str(found_user["_id"])}, status=status.HTTP_201_CREATED)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+        #return status
 
 class serviece_request(APIView):
     '''
@@ -352,13 +402,32 @@ class public_page(APIView):
         
         #return details
         return Response ({"Message":your_message}, status.HTTP_200_OK)
-    def post(self, request, your_message):
+    def post(self, request, format=None):
         #validate page create data
+        serializer = PublicPageSerializer(data=request.data)
         
+        #get user from session_id
+        #get 
         #store the data in database
-        
+        if serializer.is_valid():
+            #serializer data for database
+            #database instance
+            client = pymongo.MongoClient(mongodb_url)
+            db = client.test
+            public_pages = db.public_pages
+            
+            #query if already exist 
+            found_page = public_pages.find_one({"page_title": serializer.validated_data.get("page_title")})
+            if(found_page is None):            
+                post_id = public_pages.insert_one(serializer.validated_data).inserted_id
+                
+                return Response({"status_code":"page_creation_successfull",
+    "default_description":"successfully created page", "id": str(post_id)}, status=status.HTTP_200_OK)
+            else:
+                return Response({"status_code":"registration_failed",
+    "default_description":"already exist", "id": str(found_page["_id"])}, status=status.HTTP_200_OK)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
         #return status message
-        return Response ({"Message":your_message}, status.HTTP_200_OK)
         
 class NoyonIOView(APIView):
     def get(self,request):

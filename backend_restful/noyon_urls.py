@@ -20,7 +20,7 @@ urlpatterns = [
     url(r'^noyonio/$', NoyonIOView.as_view(), name='noyonio'),  
     url(r'^message/(?P<your_message>.*)/$', NoyonParamView.as_view(), name='message'),
     url(r'^search/$', Search.as_view(), name='search'),
-    url(r'^login/$', Login.as_view(), name='login'),
+    #url(r'^login/$', Login.as_view(), name='login'),
     url(r'^registration/$', Registration.as_view(), name='registration'),
     url(r'^publicpages/$', PublicPages.as_view(), name='publicpages'),
 ]

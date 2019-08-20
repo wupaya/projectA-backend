@@ -1,7 +1,7 @@
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .jabin import Jabin,Jabin2,Jabin3,Jabin4,Jabin5
+from .jabin import Jabin,Jabin2,Jabin3,Jabin4
 from .jabin_serializer import JabinSerializer,JabinSerializer2,JabinSerializer3,JabinSerializer4,JabinSerializer5
 
 class JabinView(APIView):
