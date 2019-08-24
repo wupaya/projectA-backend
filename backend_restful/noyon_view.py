@@ -7,6 +7,7 @@ from .noyon import Noyon3
 from .noyon import Noyon4
 from .noyon import Noyon5
 from .noyon import NoyonIO
+from .noyon import User
 from .noyon_serializer import NoyonSerializer
 from .noyon_serializer import Noyon2Serializer
 from .noyon_serializer import Noyon3Serializer
@@ -14,6 +15,7 @@ from .noyon_serializer import Noyon4Serializer
 from .noyon_serializer import Noyon5Serializer
 from .noyon_serializer import NoyonParameterInput
 from .noyon_serializer import NoyonParameterOutput
+from .noyon_serializer import RegistrationSerializer
 
 class NoyonView(APIView):
     '''
@@ -406,6 +408,18 @@ class NoyonParamView(APIView):
         return Response ({"Message":your_message}, status.HTTP_200_OK)
         
 class NoyonIOView(APIView):
+    def get(self,request):
+        #serializer = NoyonParameterInput(data=request.data)
+        #if serializer.is_valid():
+        
+        num1 = request.query_params.get('num1', None)
+        num2 = request.query_params.get('num2', None)
+        nio = NoyonIO.give_me_sum(num1,num2)
+        if num1 is not None and num1.isnumeric() and num2 is not None and num2.isnumeric():
+            #nio = NoyonIO.filter(give_me_sum(int(num1),int(num2))
+            nio = nio.filter(num1+num2)
+        return nio
+        
     def post(self,request):
         serializer = NoyonParameterInput(data=request.data)
         if serializer.is_valid():
@@ -413,3 +427,39 @@ class NoyonIOView(APIView):
             nio.sum = nio.give_me_sum(serializer.validated_data.get('num1'),serializer.validated_data.get('num2'))
             return Response(NoyonParameterOutput(nio).data, status=status.HTTP_201_CREATED)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+
+class Search(APIView):
+    '''need password'''
+    pass
+
+class Login(APIView):
+    '''need password'''
+    pass
+
+class Registration(APIView):
+    def get(self, request):
+        serializer = RegistrationSerializer(data=request.data)
+        user = User()
+        #suppose u read the following data from database and u assign them to the user object
+        user.email = "example@domain.com"
+        user.password = "password12@#"
+        user.username = "name123"
+        user.name = "Mr. Name"
+        user.phone_no = "+1847439202"
+        return Response(RegistrationSerializer(user).data, status=status.HTTP_201_CREATED)
+    
+    def post(self,request):
+        serializer = RegistrationSerializer(data=request.data)
+        if serializer.is_valid():
+            #user = User()
+            #TODO store data in database
+            return Response ({"Registratiion Successfull"}, status.HTTP_200_OK)
+        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+    
+    
+    '''need password'''
+    pass
+
+class PublicPages(APIView):
+    '''need password'''
+    pass

@@ -6,6 +6,10 @@ from .noyon_view import Noyon4View
 from .noyon_view import Noyon5View
 from .noyon_view import NoyonParamView
 from .noyon_view import NoyonIOView
+from .noyon_view import Search
+from .noyon_view import Login
+from .noyon_view import Registration
+from .noyon_view import PublicPages
 
 urlpatterns = [
     url(r'^noyon/$', NoyonView.as_view(), name='noyon'),
@@ -15,4 +19,8 @@ urlpatterns = [
     url(r'^noyon5/$', Noyon5View.as_view(), name='noyon5'),
     url(r'^noyonio/$', NoyonIOView.as_view(), name='noyonio'),  
     url(r'^message/(?P<your_message>.*)/$', NoyonParamView.as_view(), name='message'),
+    url(r'^search/$', Search.as_view(), name='search'),
+    #url(r'^login/$', Login.as_view(), name='login'),
+    url(r'^registration/$', Registration.as_view(), name='registration'),
+    url(r'^publicpages/$', PublicPages.as_view(), name='publicpages'),
 ]
