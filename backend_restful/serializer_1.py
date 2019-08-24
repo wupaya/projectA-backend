@@ -20,9 +20,8 @@ class jabinParameterOutput(serializers.Serializer):
 class RegistrationSerializer(serializers.Serializer):
     email = serializers.EmailField()
     password = serializers.CharField(style={'input_type': 'password'})
-    username = serializers.CharField()
     name = serializers.CharField()
-    phone_no = serializers.CharField()
+    phone_no = serializers.CharField(required=False)
     
 class RegistrationOutputSerializer(serializers.Serializer):
     status_code = serializers.CharField()
