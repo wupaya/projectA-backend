@@ -110,7 +110,7 @@ class login(APIView):
                 'session_id':str(session.inserted_id)}
                 login_object = {"token": jwt.encode(jwt_payload, jwt_secret, algorithm='HS256')}
                 return Response({"status_code":"login_successfull",
-    "default_description":"successfully registered", "data": str(login_object)}, status=status.HTTP_201_CREATED)
+    "default_description":"successfully registered", "data": login_object}, status=status.HTTP_201_CREATED)
             else:
                 return Response({"status_code":"login_failed",
     "default_description":"user not found"}, status=status.HTTP_201_CREATED)
