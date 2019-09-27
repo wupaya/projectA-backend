@@ -1,7 +1,9 @@
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializer_1 import RegistrationSerializer, LoginInputSerializer, PublicPageSerializer
+from .serializer_1 import RegistrationSerializer, LoginInputSerializer, PublicPageSerializer, ServicesSerializer
+from .noyon import Services
+
 import pymongo
 from rest_framework.parsers import JSONParser
 from rest_framework.renderers import JSONRenderer
@@ -29,16 +31,16 @@ class login(APIView):
 
     * **Method:**
 
-      `POST` 
-      
+      `POST`
+
     *  **URL Params**
 
        no ulr params
-       
+
     * **Data Params**
 
     **Required:**
-     
+
        `email=[string]`
        `password=[string]`
 
@@ -47,7 +49,7 @@ class login(APIView):
       * **status_code:** login_successfull <br />
       * **default_description:** successfully registered <br />
         **data:** `{'token': b'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoiNWQ1YWU0MjExMzYxNGI0ZjcxODU2ZmQ5Iiwic2Vzc2lvbl9pZCI6IjVkNjBiYzE2Zjc1ZjhkZjcxYzQxYmE2YSJ9.ngxcHBHQ9NZQlIT9VKRgUEuGxiyvBl-WRRr7N2sKjYg'}`
-     
+
     * **Error Response:**
 
         **status_code:** login_failed <br />
@@ -74,18 +76,18 @@ class login(APIView):
     '''
     # def get(self,request):
         # validate request data with serializer
-        
+
         # query database
-        
+
         # return error if not found
-        
+
         # return token
-        
+
         # return Response (serializer.data, status.HTTP_200_OK)
-    
+
     def post(self, request, format=None):
         #validate input data with serializer
-        serializer = LoginInputSerializer(data=request.data)        
+        serializer = LoginInputSerializer(data=request.data)
         #store in database
         if serializer.is_valid():
             #serializer data for database
@@ -93,19 +95,19 @@ class login(APIView):
             client = pymongo.MongoClient(mongodb_url)
             db = client.test
             users = db.users
-            
-            #query if already exist 
+
+            #query if already exist
             found_user = users.find_one({"$and":[{"email": serializer.validated_data.get("email")},{"password": serializer.validated_data.get("password")}]})
             if(found_user is not None):
-                
-                
+
+
                 session_object = {
                     "user": str(found_user),
                     "expired_datetime" : datetime.utcnow()
                 }
                 sessions = db.sessions
                 session = sessions.insert_one(session_object)
-                
+
                 jwt_payload = {'user': str(found_user["_id"]),
                 'session_id':str(session.inserted_id)}
                 login_object = {"token": jwt.encode(jwt_payload, jwt_secret, algorithm='HS256')}
@@ -116,7 +118,7 @@ class login(APIView):
     "default_description":"user not found"}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
-        
+
 class services(APIView):
     '''
     **Show Noyon2View**
@@ -128,21 +130,21 @@ class services(APIView):
       <_The URL Structure (path only, no root url)_>
 
     * **Method:**
-      
+
       <_The request type_>
 
       `GET` | `POST` | `HEAD` | `OPTIONS`
-      
+
     *  **URL Params**
 
-       <_If URL params exist, specify them in accordance with name mentioned in URL section. Separate into optional and required. Document data constraints._> 
+       <_If URL params exist, specify them in accordance with name mentioned in URL section. Separate into optional and required. Document data constraints._>
 
        **Required:**
-     
+
        `id=[integer]`
 
        **Optional:**
-     
+
        `photo_id=[alphanumeric]`
 
     * **Data Params**
@@ -150,12 +152,12 @@ class services(APIView):
       <_If making a post request, what should the body payload look like? URL Params rules apply here too._>
 
     * **Success Response:**
-      
+
       <_What should the status code be on success and is there any returned data? This is useful when people need to to know what their callbacks should expect!_>
 
       * **Code:** 200 <br />
         **Content:** `{ id : 12 }`
-     
+
     * **Error Response:**
 
       <_Most endpoints will have many ways they can fail. From unauthorized access, to wrongful parameters etc. All of those should be liste d here. It might seem repetitive, but it helps prevent assumptions from being made where they should be._>
@@ -170,23 +172,23 @@ class services(APIView):
 
     * **Sample Call:**
 
-      <_Just a sample call to your endpoint in a runnable format ($.ajax call or a curl request) - this makes life easier and more predictable._> 
+      <_Just a sample call to your endpoint in a runnable format ($.ajax call or a curl request) - this makes life easier and more predictable._>
 
     * **Notes:**
 
-      <_This is where all uncertainties, commentary, discussion etc. can go. I recommend timestamping and identifying oneself when leaving comments here._> 
+      <_This is where all uncertainties, commentary, discussion etc. can go. I recommend timestamping and identifying oneself when leaving comments here._>
     '''
     def get(self,request):
         #query database
-       
+
         #return a list of services
-        
+
         serializer = Noyon2Serializer(Noyon2())
         return Response (serializer.data, status.HTTP_200_OK)
     def post(self, request):
         serializer = Noyon2Serializer(Noyon2())
         return Response (serializer.data, status.HTTP_200_OK)
-        
+
 class register(APIView):
     '''
     **Register New User**
@@ -198,9 +200,9 @@ class register(APIView):
       /register
 
     * **Method:**
-    
+
       `POST`
-      
+
     * **URL Params**
 
        No Params
@@ -209,21 +211,21 @@ class register(APIView):
     * **Data Params**
 
         `email=string`
-        
+
         `password=string`
-        
+
         `name=string`
-        
+
         `phone_no=string`
 
 
     * **Success Response:**
-      
+
 
       * **status_code:** registration_successfull <br />
         **default_description:** `successfully registered`
         **id:** `5d60ce0ee8dc7a242d323337`
-     
+
     * **Error Response:**
 
       * **status_code:** registration_failed <br />
@@ -243,7 +245,7 @@ class register(APIView):
             console.log(r);
         }
     });
-    ``` 
+    ```
 
     * **Notes:**
 
@@ -255,7 +257,7 @@ class register(APIView):
         return Response ({}, status.HTTP_200_OK)
     def post(self, request, format=None):
         #validate input data with serializer
-        serializer = RegistrationSerializer(data=request.data)        
+        serializer = RegistrationSerializer(data=request.data)
         #store in database
         if serializer.is_valid():
             #serializer data for database
@@ -263,12 +265,12 @@ class register(APIView):
             client = pymongo.MongoClient(mongodb_url)
             db = client.test
             users = db.users
-            
-            #query if already exist 
+
+            #query if already exist
             found_user = users.find_one({"email": serializer.validated_data.get("email")})
-            if(found_user is None):            
+            if(found_user is None):
                 post_id = users.insert_one(serializer.validated_data).inserted_id
-                
+
                 return Response({"status_code":"registration_successfull",
     "default_description":"successfully registered", "id": str(post_id)}, status=status.HTTP_201_CREATED)
             else:
@@ -288,21 +290,21 @@ class serviece_request(APIView):
       <_The URL Structure (path only, no root url)_>
 
     * **Method:**
-      
+
       <_The request type_>
 
       `GET` | `POST` | `HEAD` | `OPTIONS`
-      
+
     *  **URL Params**
 
-       <_If URL params exist, specify them in accordance with name mentioned in URL section. Separate into optional and required. Document data constraints._> 
+       <_If URL params exist, specify them in accordance with name mentioned in URL section. Separate into optional and required. Document data constraints._>
 
        **Required:**
-     
+
        `id=[integer]`
 
        **Optional:**
-     
+
        `photo_id=[alphanumeric]`
 
     * **Data Params**
@@ -310,12 +312,12 @@ class serviece_request(APIView):
       <_If making a post request, what should the body payload look like? URL Params rules apply here too._>
 
     * **Success Response:**
-      
+
       <_What should the status code be on success and is there any returned data? This is useful when people need to to know what their callbacks should expect!_>
 
       * **Code:** 200 <br />
         **Content:** `{ id : 12 }`
-     
+
     * **Error Response:**
 
       <_Most endpoints will have many ways they can fail. From unauthorized access, to wrongful parameters etc. All of those should be liste d here. It might seem repetitive, but it helps prevent assumptions from being made where they should be._>
@@ -330,23 +332,23 @@ class serviece_request(APIView):
 
     * **Sample Call:**
 
-      <_Just a sample call to your endpoint in a runnable format ($.ajax call or a curl request) - this makes life easier and more predictable._> 
+      <_Just a sample call to your endpoint in a runnable format ($.ajax call or a curl request) - this makes life easier and more predictable._>
 
     * **Notes:**
 
-      <_This is where all uncertainties, commentary, discussion etc. can go. I recommend timestamping and identifying oneself when leaving comments here._> 
+      <_This is where all uncertainties, commentary, discussion etc. can go. I recommend timestamping and identifying oneself when leaving comments here._>
     '''
     def get(self,request):
         #validate request data with serializer
-        
+
         #query database for service
-        
+
         #return error if not found
-        
+
         #call service handler object and pass data
-        
+
         #return service handler response
-        
+
         return Response (serializer.data, status.HTTP_200_OK)
     def post(self, request):
         serializer = Noyon4Serializer(Noyon4())
@@ -366,7 +368,7 @@ class ExampleAuthentication(authentication.BaseAuthentication):
             user = User.objects.get()
         except User.DoesNotExist:
             raise exceptions.AuthenticationFailed('No such user')
-        return (user, None)        
+        return (user, None)
 
 
 class TokenAuthentication(authentication.BaseAuthentication):
@@ -379,7 +381,7 @@ class TokenAuthentication(authentication.BaseAuthentication):
 
     keyword = 'Token'
     model = None
-    
+
     def get_authorization_header(self, request):
         """
         Return request's 'Authorization:' header, as a bytestring.
@@ -390,7 +392,7 @@ class TokenAuthentication(authentication.BaseAuthentication):
             # Work around django test client oddness
             auth = auth.encode(HTTP_HEADER_ENCODING)
         return auth
-        
+
     def get_model(self):
         if self.model is not None:
             return self.model
@@ -454,14 +456,14 @@ class public_page(APIView):
 
     * **Method:**
 
-      `POST` 
-      
+      `POST`
+
     *  **URL Params**
 
        No Params
 
     * **Data Params**
-    
+
       `page_title=string`
       `type_of_institute=string`
       `founding_date=string`
@@ -475,7 +477,7 @@ class public_page(APIView):
       * **status_code:** page_creation_successfull
       * **default_description:** successfully created page
         **id:** `5d60d59ff0626c6be06ec94c`
-     
+
     * **Error Response:**
 
       * **status_code:** registration_failed <br />
@@ -510,25 +512,25 @@ class public_page(APIView):
       Requires authentication
     '''
 
-    
+
     authentication_classes = [TokenAuthentication]
     #permission_classes = [IsAuthenticated]
-    
+
     # def get(self,request, your_message):
         #validate pageid with serializer
-        
+
         #query database for page information
-        
+
         #return error if not found
-        
+
         #return details
         # return Response ({"Message":your_message}, status.HTTP_200_OK)
     def post(self, request, format=None):
         #validate page create data
         serializer = PublicPageSerializer(data=request.data)
-        
+
         #get user from session_id
-        #get 
+        #get
         #store the data in database
         if serializer.is_valid():
             #serializer data for database
@@ -536,12 +538,12 @@ class public_page(APIView):
             client = pymongo.MongoClient(mongodb_url)
             db = client.test
             public_pages = db.public_pages
-            
-            #query if already exist 
+
+            #query if already exist
             found_page = public_pages.find_one({"page_title": serializer.validated_data.get("page_title")})
-            if(found_page is None):            
+            if(found_page is None):
                 post_id = public_pages.insert_one(serializer.validated_data).inserted_id
-                
+
                 return Response({"status_code":"page_creation_successfull",
     "default_description":"successfully created page", "id": str(post_id)}, status=status.HTTP_200_OK)
             else:
@@ -549,12 +551,12 @@ class public_page(APIView):
     "default_description":"already exist", "id": str(found_page["_id"])}, status=status.HTTP_200_OK)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
         #return status message
-        
+
 class NoyonIOView(APIView):
     def get(self,request):
         #serializer = NoyonParameterInput(data=request.data)
         #if serializer.is_valid():
-        
+
         num1 = request.query_params.get('num1', None)
         num2 = request.query_params.get('num2', None)
         nio = NoyonIO.give_me_sum(num1,num2)
@@ -562,7 +564,7 @@ class NoyonIOView(APIView):
             #nio = NoyonIO.filter(give_me_sum(int(num1),int(num2))
             nio = nio.filter(num1+num2)
         return nio
-        
+
     def post(self,request):
         serializer = NoyonParameterInput(data=request.data)
         if serializer.is_valid():
@@ -590,7 +592,7 @@ class Registration(APIView):
         user.name = "Mr. Name"
         user.phone_no = "+1847439202"
         return Response(RegistrationSerializer(user).data, status=status.HTTP_201_CREATED)
-    
+
     def post(self,request):
         serializer = RegistrationSerializer(data=request.data)
         if serializer.is_valid():
@@ -598,10 +600,24 @@ class Registration(APIView):
             #TODO store data in database
             return Response ({"Registratiion Successfull"}, status.HTTP_200_OK)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-    
-    
+
+
     '''need password'''
     pass
+
+
+class services(APIView):
+    def get(self,request):
+        serializer = ServicesSerializer(Services())
+        return Response (serializer.data, status.HTTP_200_OK)
+    def post(self, request):
+        serializer = ServicesSerializer(Services())
+        return Response (serializer.data, status.HTTP_200_OK)
+
+
+
+
+
 
 class PublicPages(APIView):
     '''need password'''
