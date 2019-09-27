@@ -41,7 +41,5 @@ class Session(object):
     session_id = ""
     expired_date_time = ""
 
-class Sercices(object):
+class Services(object):
     services = "This is your service name"
-
-    
