@@ -2,7 +2,7 @@ from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializer_1 import RegistrationSerializer, LoginInputSerializer, PublicPageSerializer, ServicesSerializer
-from .noyon import Services
+from .noyon import AvailableServices, SubscribedServices
 
 import pymongo
 from rest_framework.parsers import JSONParser
@@ -608,15 +608,9 @@ class Registration(APIView):
 
 class services(APIView):
     def get(self,request):
-        serializer = ServicesSerializer(Services())
-        return Response (serializer.data, status.HTTP_200_OK)
-    def post(self, request):
-        serializer = ServicesSerializer(Services())
-        return Response (serializer.data, status.HTTP_200_OK)
-
-
-
-
+        available_serializer = ServicesSerializer(AvailableServices())
+        subscribed_serializer = ServicesSerializer(AvailableServices())
+        return Response ({"AvailableServices":available_serializer.data, "SubscribedServices":subscribed_serializer.data}, status.HTTP_200_OK)
 
 
 class PublicPages(APIView):

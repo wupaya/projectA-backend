@@ -42,4 +42,6 @@ class PublicPageSerializer(serializers.Serializer):
     description = serializers.CharField()
 
 class ServicesSerializer(serializers.Serializer):
-    services = serializers.CharField()
+    id = serializers.IntegerField()
+    title = serializers.CharField()
+    description = serializers.CharField()

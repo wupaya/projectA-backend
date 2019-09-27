@@ -41,5 +41,12 @@ class Session(object):
     session_id = ""
     expired_date_time = ""
 
-class Services(object):
-    services = "This is your service name"
+class AvailableServices(object):
+    id = "100"
+    title = "hello service"
+    description = "This is hello service"
+
+class SubscribedServices(object):
+    id = "100"
+    title = "hello service"
+    description = "This is hello service"
