@@ -1,8 +1,8 @@
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializer_1 import RegistrationSerializer, LoginInputSerializer, PublicPageSerializer, ServicesSerializer
-from .noyon import AvailableServices, SubscribedServices
+from .serializer_1 import RegistrationSerializer, LoginInputSerializer, PublicPageSerializer, ServicesSerializer, PublicPagesSerializer
+from .noyon import AvailableServices, SubscribedServices, PublicPages
 
 import pymongo
 from rest_framework.parsers import JSONParser
@@ -613,6 +613,7 @@ class services(APIView):
         return Response ({"AvailableServices":available_serializer.data, "SubscribedServices":subscribed_serializer.data}, status.HTTP_200_OK)
 
 
-class PublicPages(APIView):
-    '''need password'''
-    pass
+class public_pages(APIView):
+    def get(self, request):
+        serializer = PublicPagesSerializer(PublicPages())
+        return Response (serializer.data, status.HTTP_200_OK)

@@ -50,3 +50,8 @@ class SubscribedServices(object):
     id = "100"
     title = "hello service"
     description = "This is hello service"
+
+class PublicPages(object):
+    id = "1"
+    title = "My Page"
+    description = "The descripion of the page"
