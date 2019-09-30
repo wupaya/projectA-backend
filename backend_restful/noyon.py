@@ -42,9 +42,10 @@ class Session(object):
     expired_date_time = ""
 
 class AvailableServices(object):
-    id = "100"
-    title = "hello service"
-    description = "This is hello service"
+    def __init__(self, id, title, description):
+        self.id = id
+        self.title = title
+        self.description = description
 
 class SubscribedServices(object):
     id = "100"
