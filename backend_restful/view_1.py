@@ -607,13 +607,18 @@ class Registration(APIView):
 
 class services(APIView):
     def get(self,request):
-        availableService = [AvailableServices(id = '2', title = ' Service 2', description = ' description 2'),
-                            AvailableServices(id = '3', title = ' Service 3', description = ' description 3'),
-                            AvailableServices(id = '4', title = ' Service 4', description = ' description 4')]
+        availableService = [AvailableServices(id = '1', title = 'Available Service 1', description = 'Service description 1'),
+                            AvailableServices(id = '2', title = 'Available Service 2', description = 'Service description 2'),
+                            AvailableServices(id = '3', title = 'Available Service 3', description = 'Service description 3'),
+                            AvailableServices(id = '4', title = 'Available Service 4', description = 'Service description 4')]
         available_serializer = ServicesSerializer(availableService, many=True)
-        subscribed_serializer = ServicesSerializer(SubscribedServices())
-        return Response ({"AvailableServices":available_serializer.data, "SubscribedServices":subscribed_serializer.data}, status.HTTP_200_OK)
 
+        subscribedService = [SubscribedServices(id = '1', title = 'Subscribed Service 1', description = 'Service description 1'),
+                            SubscribedServices(id = '2', title = 'Subscribed Service 2', description = 'Service description 2'),
+                            SubscribedServices(id = '3', title = 'Subscribed Service 3', description = 'Service description 3'),
+                            SubscribedServices(id = '4', title = 'Subscribed Service 4', description = 'Service description 4')]
+        subscribed_serializer = ServicesSerializer(subscribedService, many=True)
+        return Response ({"AvailableServices":available_serializer.data, "SubscribedServices":subscribed_serializer.data}, status.HTTP_200_OK)
 
 class public_pages(APIView):
     def get(self, request):
