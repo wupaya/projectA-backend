@@ -640,7 +640,7 @@ class services(APIView):
 "default_description":"successfully added the subscribed servics", "id": str(post_id)}, status=status.HTTP_200_OK)
         else:
             return Response({"status_code":"Subscribed_ervices_failed",
-"default_description":"already exist", "id": str(found_page["_id"])}, status=status.HTTP_200_OK)
+"default_description":"already exist", "id": str(found_subscribed_services["_id"])}, status=status.HTTP_200_OK)
         return Response(subscribed_serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
