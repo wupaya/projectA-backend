@@ -635,7 +635,7 @@ class services(APIView):
             found_subscribed_services = subscribed_services.find_one({"id": subscribed_serializer.validated_data.get("id"), "title": subscribed_serializer.validated_data.get("title"), "description":subscribed_serializer.validated_data.get("description")})
             if(found_subscribed_services is None):
                 post_id = subscribed_services.insert_one(serializer.validated_data).inserted_id
-                retutn Response({"status_code":"subscribed_services_added_successfull",
+                return Response({"status_code":"subscribed_services_added_successfull",
     "default_description":"successfully added the subscribed servics", "id": str(post_id)}, status=status.HTTP_200_OK)
             else:
                 return Response({"status_code":"Subscribed_ervices_failed",
