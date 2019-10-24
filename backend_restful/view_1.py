@@ -625,7 +625,7 @@ class services(APIView):
                             SubscribedServices(id = '2', title = 'Subscribed Service 2', description = 'Service description 2'),
                             SubscribedServices(id = '3', title = 'Subscribed Service 3', description = 'Service description 3'),
                             SubscribedServices(id = '4', title = 'Subscribed Service 4', description = 'Service description 4')]
-        subscribed_serializer = ServicesSerializer(subscribedService, many=True)
+        subscribed_serializer = ServicesSerializer(data=subscribedService, many=True)
         if subscribed_serializer.is_valid():
             #serializer data for database
             #database instance
@@ -640,7 +640,7 @@ class services(APIView):
             else:
                 return Response({"status_code":"Subscribed_ervices_failed",
     "default_description":"already exist", "id": str(found_page["_id"])}, status=status.HTTP_200_OK)
-        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+        return Response(subscribed_serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
 class public_pages(APIView):
