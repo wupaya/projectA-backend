@@ -625,21 +625,20 @@ class services(APIView):
                             SubscribedServices(id = '2', title = 'Subscribed Service 2', description = 'Service description 2'),
                             SubscribedServices(id = '3', title = 'Subscribed Service 3', description = 'Service description 3'),
                             SubscribedServices(id = '4', title = 'Subscribed Service 4', description = 'Service description 4')]
-        subscribed_serializer = ServicesSerializer(data=subscribedService, many=True)
-        if subscribed_serializer.is_valid():
-            #serializer data for database
-            #database instance
-            client = pymongo.MongoClient(mongodb_url)
-            db = client.test
-            subscribed_services = db.subscribed_services
-            found_subscribed_services = subscribed_services.find_one({"id": subscribed_serializer.validated_data.get("id"), "title": subscribed_serializer.validated_data.get("title"), "description":subscribed_serializer.validated_data.get("description")})
-            if(found_subscribed_services is None):
-                post_id = subscribed_services.insert_one(serializer.validated_data).inserted_id
-                return Response({"status_code":"subscribed_services_added_successfull",
-    "default_description":"successfully added the subscribed servics", "id": str(post_id)}, status=status.HTTP_200_OK)
-            else:
-                return Response({"status_code":"Subscribed_ervices_failed",
-    "default_description":"already exist", "id": str(found_page["_id"])}, status=status.HTTP_200_OK)
+        subscribed_serializer = ServicesSerializer(subscribedService, many=True)
+        #serializer data for database
+        #database instance
+        client = pymongo.MongoClient(mongodb_url)
+        db = client.test
+        subscribed_services = db.subscribed_services
+        found_subscribed_services = subscribed_services.find_one({"id": subscribed_serializer.data.get("id"), "title": subscribed_serializer.data.get("title"), "description":subscribed_serializer.data.get("description")})
+        if(found_subscribed_services is None):
+            post_id = subscribed_services.insert_one(serializer.data).inserted_id
+            return Response({"status_code":"subscribed_services_added_successfull",
+"default_description":"successfully added the subscribed servics", "id": str(post_id)}, status=status.HTTP_200_OK)
+        else:
+            return Response({"status_code":"Subscribed_ervices_failed",
+"default_description":"already exist", "id": str(found_page["_id"])}, status=status.HTTP_200_OK)
         return Response(subscribed_serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
