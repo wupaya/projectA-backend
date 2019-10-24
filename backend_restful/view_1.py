@@ -631,9 +631,11 @@ class services(APIView):
         client = pymongo.MongoClient(mongodb_url)
         db = client.test
         subscribed_services = db.subscribed_services
-        found_subscribed_services = subscribed_services.find_one({"id": subscribed_serializer.data.get("id"), "title": subscribed_serializer.data.get("title"), "description":subscribed_serializer.data.get("description")})
+        #just inserting the first data for testing
+        first_data = subscribed_serializer.data[0]
+        found_subscribed_services = subscribed_services.find_one({"id": first_data.get("id"), "title": first_data.get("title"), "description":first_data.get("description")})
         if(found_subscribed_services is None):
-            post_id = subscribed_services.insert_one(serializer.data).inserted_id
+            post_id = subscribed_services.insert_one(first_data).inserted_id
             return Response({"status_code":"subscribed_services_added_successfull",
 "default_description":"successfully added the subscribed servics", "id": str(post_id)}, status=status.HTTP_200_OK)
         else:
