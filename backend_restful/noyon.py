@@ -3,13 +3,13 @@ class Noyon(object):
 
 class Noyon2(object):
     greetings = "Hello again, i'm Noyon"
-    
+
 class Noyon3(object):
     greetings = "Hi There, i'm Noyon"
-    
+
 class Noyon4(object):
     greetings = "Hey, i'm Noyon, What's up?"
-    
+
 class Noyon5(object):
     greetings = "Hey, i'm Noyon, How can i help you?"
 
@@ -30,12 +30,12 @@ class Registration(object):
     user_id = ""
     registration_date = ""
     email_activation_status = ""
-    
+
 class PublicPage(object):
     page_id = ""
     page_title = ""
     page_publish_status = ""
-    
+
 class Session(object):
     ueer_id = ""
     session_id = ""
