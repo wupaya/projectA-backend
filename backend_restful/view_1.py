@@ -1,8 +1,8 @@
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializer_1 import RegistrationSerializer, LoginInputSerializer, PublicPageSerializer, ServicesSerializer
-from .noyon import AvailableServices, SubscribedServices, PublicPage
+from .serializer_1 import RegistrationSerializer, LoginInputSerializer, PublicPageSerializer, ServicesSerializer, ServiceRequestSerializer
+from .noyon import AvailableServices, SubscribedServices, PublicPage, ServiceRequest
 
 import pymongo
 from rest_framework.parsers import JSONParser
@@ -279,7 +279,7 @@ class register(APIView):
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
         #return status
 
-class serviece_request(APIView):
+class service_request(APIView):
     '''
     **Show Noyon4View**
     ----
@@ -340,6 +340,8 @@ class serviece_request(APIView):
     '''
     def get(self,request):
         #validate request data with serializer
+        serializer = ServiceRequestSerializer(ServiceRequest())
+        return Response (serializer.data, status.HTTP_200_OK)
 
         #query database for service
 
@@ -353,6 +355,7 @@ class serviece_request(APIView):
     def post(self, request):
         serializer = Noyon4Serializer(Noyon4())
         return Response (serializer.data, status.HTTP_200_OK)
+
 from django.contrib.auth.models import User
 from rest_framework import authentication
 from rest_framework import HTTP_HEADER_ENCODING, exceptions
