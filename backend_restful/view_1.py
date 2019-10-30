@@ -350,10 +350,9 @@ class service_request(APIView):
         #call service handler object and pass data
 
         #return service handler response
-
-        return Response (serializer.data, status.HTTP_200_OK)
     def post(self, request):
-        serializer = Noyon4Serializer(Noyon4())
+
+        #will be implement later
         return Response (serializer.data, status.HTTP_200_OK)
 
 from django.contrib.auth.models import User
