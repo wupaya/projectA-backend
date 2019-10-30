@@ -32,9 +32,13 @@ class Registration(object):
     email_activation_status = ""
 
 class PublicPage(object):
-    page_id = ""
-    page_title = ""
-    page_publish_status = ""
+    page_title = "Page Title here"
+    type_of_institute = "Type of Institue Here"
+    founding_date = "founding date here"
+    address_district = "district address here"
+    address_upozila = "Upozilla address here"
+    no_of_stakeholder = "Number of Stakeholder here"
+    description = "Page description here"
 
 class Session(object):
     ueer_id = ""
@@ -52,8 +56,3 @@ class SubscribedServices(object):
         self.id = id
         self.title = title
         self.description = description
-
-class PublicPages(object):
-    id = "1"
-    title = "My Page"
-    description = "The descripion of the page"

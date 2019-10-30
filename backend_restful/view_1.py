@@ -1,8 +1,8 @@
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
-from .serializer_1 import RegistrationSerializer, LoginInputSerializer, PublicPageSerializer, ServicesSerializer, PublicPagesSerializer
-from .noyon import AvailableServices, SubscribedServices, PublicPages
+from .serializer_1 import RegistrationSerializer, LoginInputSerializer, PublicPageSerializer, ServicesSerializer
+from .noyon import AvailableServices, SubscribedServices, PublicPage
 
 import pymongo
 from rest_framework.parsers import JSONParser
@@ -525,6 +525,10 @@ class public_page(APIView):
 
         #return details
         # return Response ({"Message":your_message}, status.HTTP_200_OK)
+    def get(self, request):
+        serializer = PublicPageSerializer(PublicPage())
+        return Response (serializer.data, status.HTTP_200_OK)
+
     def post(self, request, format=None):
         #validate page create data
         serializer = PublicPageSerializer(data=request.data)
@@ -551,6 +555,7 @@ class public_page(APIView):
     "default_description":"already exist", "id": str(found_page["_id"])}, status=status.HTTP_200_OK)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
         #return status message
+
 
 class NoyonIOView(APIView):
     def get(self,request):
@@ -642,24 +647,3 @@ class services(APIView):
             return Response({"status_code":"Subscribed_ervices_failed",
 "default_description":"already exist", "id": str(found_subscribed_services["_id"])}, status=status.HTTP_200_OK)
         return Response(subscribed_serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-
-
-class public_pages(APIView):
-    def get(self, request):
-        serializer = PublicPagesSerializer(PublicPages())
-        return Response (serializer.data, status.HTTP_200_OK)
-    def post(self, request):
-        serializer = PublicPagesSerializer(PublicPages())
-        if serializer.is_valid():
-            client = pymongo.MongoClient(mongodb_url)
-            db = client.test
-            pp = db.pp
-            found_page = pp.find_one({"id": serializer.validated_data.get("id"), "title": serializer.validated_data.get("title"), "descripion": serializer.validated_data.get("descripion")})
-            if(found_page is None):
-                post_id = pp.insert_one(serializer.validated_data).inserted_id
-                return Response({"status_code":"page_creation_successfull",
-    "default_description":"successfully created page", "id": str(post_id)}, status=status.HTTP_200_OK)
-            else:
-                return Response({"status_code":"page_failed",
-    "default_description":"already exist", "id": str(found_page["_id"])}, status=status.HTTP_200_OK)
-        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
