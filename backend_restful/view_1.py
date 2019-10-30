@@ -339,6 +339,10 @@ class service_request(APIView):
       <_This is where all uncertainties, commentary, discussion etc. can go. I recommend timestamping and identifying oneself when leaving comments here._>
     '''
     def get(self,request):
+
+        '''
+        permission_classes = [IsAuthenticated]
+        '''
         #validate request data with serializer
         serializer = ServiceRequestSerializer(ServiceRequest())
         return Response (serializer.data, status.HTTP_200_OK)
