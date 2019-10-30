@@ -1,7 +1,7 @@
 {
     "_meta": {
         "hash": {
-            "sha256": "1163c72a1a9e528600e2374c4cb82ecb33e596339de547224fe2b4e8be7801b5"
+            "sha256": "a1740a250234c442a318d64a35da8722c754e474a1867e95f20b7f6ac9153654"
         },
         "pipfile-spec": 6,
         "requires": {},
@@ -40,11 +40,11 @@
         },
         "djangorestframework": {
             "hashes": [
-                "sha256:607865b0bb1598b153793892101d881466bd5a991de12bd6229abb18b1c86136",
-                "sha256:63f76cbe1e7d12b94c357d7e54401103b2e52aef0f7c1650d6c820ad708776e5"
+                "sha256:79c6efbb2514bc50cf25906d7c0a5cfead714c7af667ff4bd110312cd380ae66",
+                "sha256:a4138613b67e3a223be6c97f53b13d759c5b90d2b433bad670b8ebf95402075f"
             ],
             "index": "pypi",
-            "version": "==3.9.0"
+            "version": "==3.9.1"
         },
         "dnspython": {
             "hashes": [
@@ -129,10 +129,9 @@
         },
         "starlette": {
             "hashes": [
-                "sha256:027ac3fef5f98fdd99ba7e2ce47a7f764dd5ce0c532c7d1c8c7878fe3a7af8a0",
-                "sha256:c2ac9a42e0e0328ad20fe444115ac5e3760c1ee2ac1ff8cdb5ec915c4a453411"
+                "sha256:e41ef52e711a82ef95c195674e5d8d41c75c6b1d6f5a275637eedd4cc2150a7f"
             ],
-            "version": "==0.12.9"
+            "version": "==0.12.10"
         },
         "starlette-jwt": {
             "hashes": [
