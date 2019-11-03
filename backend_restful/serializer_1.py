@@ -45,6 +45,8 @@ class ServicesSerializer(serializers.Serializer):
     id = serializers.IntegerField()
     title = serializers.CharField()
     description = serializers.CharField()
+
+
 class ServiceRequestSerializer(serializers.Serializer):
     service_name = serializers.CharField()
     task_name = serializers.CharField()

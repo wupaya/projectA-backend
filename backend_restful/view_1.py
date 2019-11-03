@@ -14,6 +14,11 @@ from datetime import datetime
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
 
+from django.contrib.auth.models import User
+from rest_framework import authentication
+from rest_framework import HTTP_HEADER_ENCODING, exceptions
+from django.utils.translation import gettext_lazy as _
+import importlib
 
 
 mongodb_url = "mongodb+srv://anamika:1234@cluster0-t3qae.mongodb.net/test?retryWrites=true"
@@ -338,31 +343,26 @@ class service_request(APIView):
 
       <_This is where all uncertainties, commentary, discussion etc. can go. I recommend timestamping and identifying oneself when leaving comments here._>
     '''
-    def get(self,request):
 
-        '''
-        permission_classes = [IsAuthenticated]
-        '''
-        #validate request data with serializer
-        serializer = ServiceRequestSerializer(ServiceRequest())
-        return Response (serializer.data, status.HTTP_200_OK)
-
-        #query database for service
-
-        #return error if not found
-
-        #call service handler object and pass data
-
-        #return service handler response
     def post(self, request):
 
-        #will be implement later
-        return Response (serializer.data, status.HTTP_200_OK)
+        #serializing incoming data
+        serializer = ServiceRequestSerializer(data=request.data)
 
-from django.contrib.auth.models import User
-from rest_framework import authentication
-from rest_framework import HTTP_HEADER_ENCODING, exceptions
-from django.utils.translation import gettext_lazy as _
+        if serializer.is_valid():
+          service_name = serializer.validated_data.get("service_name")
+          task_name = serializer.validated_data.get("task_name")
+          pkg = 'backend_restful.'+service_name+'.'+task_name
+
+          #loading task handler module dynamically
+          task_handler_object = getattr(importlib.import_module(pkg), task_name)
+          
+          try:
+            #process task and return response
+            return Response(task_handler_object().response, status.HTTP_200_OK)
+          except Exception as e:
+            return Response({"error": str(e)}, status.HTTP_200_OK)
+        return Response (serializer.errors, status.HTTP_200_OK)
 
 class ExampleAuthentication(authentication.BaseAuthentication):
     def authenticate(self, request):
