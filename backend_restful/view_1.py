@@ -351,15 +351,15 @@ class service_request(APIView):
 
         if serializer.is_valid():
           service_name = serializer.validated_data.get("service_name")
-          task_name = serializer.validated_data.get("task_name")
-          pkg = 'backend_restful.'+service_name+'.'+task_name
+          task = serializer.validated_data.get("task")
+          pkg = 'backend_restful.'+service_name+'.'+service_name
 
           #loading task handler module dynamically
-          task_handler_object = getattr(importlib.import_module(pkg), task_name)
+          task_handler_object = getattr(importlib.import_module(pkg), "Process")
           
           try:
             #process task and return response
-            return Response(task_handler_object().response, status.HTTP_200_OK)
+            return Response(task_handler_object(task).response, status.HTTP_200_OK)
           except Exception as e:
             return Response({"error": str(e)}, status.HTTP_200_OK)
         return Response (serializer.errors, status.HTTP_200_OK)

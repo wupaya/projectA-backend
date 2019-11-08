@@ -49,5 +49,4 @@ class ServicesSerializer(serializers.Serializer):
 
 class ServiceRequestSerializer(serializers.Serializer):
     service_name = serializers.CharField()
-    task_name = serializers.CharField()
-    data = serializers.CharField()
+    task = serializers.JSONField()
