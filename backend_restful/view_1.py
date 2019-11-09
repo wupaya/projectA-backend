@@ -102,7 +102,6 @@ class login(APIView):
             users = db.users
 
             #query if already exist
-            import pymongo
             if(found_user is not None):
 
 
