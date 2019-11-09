@@ -102,7 +102,7 @@ class login(APIView):
             users = db.users
 
             #query if already exist
-            found_user = users.find_one({"$and":[{"email": serializer.validated_data.get("email")},{"password": serializer.validated_data.get("password")}]})
+            import pymongo
             if(found_user is not None):
 
 
