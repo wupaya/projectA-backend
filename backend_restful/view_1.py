@@ -532,15 +532,51 @@ class public_page(APIView):
         #return details
         # return Response ({"Message":your_message}, status.HTTP_200_OK)
     def get(self, request):
-        serializer = PublicPageSerializer(PublicPage())
-        return Response (serializer.data, status.HTTP_200_OK)
+      public_page_id = "5dd578bc0a2eee2604e88424"
+      client = pymongo.MongoClient(mongodb_url)
+      db = client.test
+      collection = db.public_pages
+      from bson.objectid import ObjectId
+      #query if already exist
+      document = collection.find_one({"_id": ObjectId(public_page_id)})
+
+      if(document is None):
+        #return not found error
+        return Response({"status_code":"not_found", "default_description":"no such thing exits in the system"}, status=status.HTTP_200_OK)
+      #serializer = PublicPageSerializer(PublicPage(document))
+      import pprint
+      pprint.pprint(document)
+      document["_id"] = str(document["_id"])
+      return Response(document, status.HTTP_200_OK)
 
     def post(self, request, format=None):
         #validate page create data
         serializer = PublicPageSerializer(data=request.data)
 
         #get user from session_id
-        #get
+        '''
+        page: {
+      nuid: 1231,
+      sid: "begum_rokey_univ",
+      title: "Department of Computer Science and Engineering",
+      subtitle: "One of the Departments at Begum Rokeya University, Rangpur",
+      contact: "",
+      short_description: "",
+      quick_overview: "It is founded in 2008. At present 250 students are enrolled in this discipline. There are 10 world class faculty memebers.",
+      lastest_events: [
+        { title: "News: CSE BRUR started using IMS system.", details_link: "#" },
+        { title: "Event: Inter batch programming contest on sunday, 9th oct.", details_link: "#" },
+        { title: "Circular: Admission is open", details_link: "#" },
+        { title: "Notice: New Policy for Scholarship.", details_link: "#" }
+      ],
+      sections: [
+        { nuid: 1, comid: "contact", description: "Contact us" },
+        { nuid: 2, comid: "gallery", description: "Visit galleries" },
+        { nuid: 3, comid: "events", description: "Show events" },
+        { nuid: 4, comid: "notices", description: "Can't find what I'm looking for." }
+      ]
+    }
+        '''
         #store the data in database
         if serializer.is_valid():
             #serializer data for database
@@ -552,13 +588,11 @@ class public_page(APIView):
             #query if already exist
             found_page = public_pages.find_one({"page_title": serializer.validated_data.get("page_title")})
             if(found_page is None):
+                #serializer.validated_data["_id"] = "brur"
                 post_id = public_pages.insert_one(serializer.validated_data).inserted_id
-
-                return Response({"status_code":"page_creation_successfull",
-    "default_description":"successfully created page", "id": str(post_id)}, status=status.HTTP_200_OK)
+                return Response({"status_code":"page_creation_successfull", "default_description":"successfully created page", "id": str(post_id)}, status=status.HTTP_200_OK)
             else:
-                return Response({"status_code":"registration_failed",
-    "default_description":"already exist", "id": str(found_page["_id"])}, status=status.HTTP_200_OK)
+                return Response({"status_code":"registration_failed", "default_description":"already exist", "id": str(found_page["_id"])}, status=status.HTTP_200_OK)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
         #return status message
 
