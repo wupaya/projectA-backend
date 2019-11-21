@@ -19,10 +19,99 @@ from rest_framework import authentication
 from rest_framework import HTTP_HEADER_ENCODING, exceptions
 from django.utils.translation import gettext_lazy as _
 import importlib
+from pprint import pprint
 
 
 mongodb_url = "mongodb+srv://anamika:1234@cluster0-t3qae.mongodb.net/test?retryWrites=true"
 jwt_secret = "secret"
+
+class ExampleAuthentication(authentication.BaseAuthentication):
+    def authenticate(self, request):
+        token = request.META.get('Authorization')
+        print(token)
+        # if not username:
+            # return None
+        try:
+            user = User.objects.get()
+        except User.DoesNotExist:
+            raise exceptions.AuthenticationFailed('No such user')
+        return (user, None)
+
+
+class TokenAuthentication(authentication.BaseAuthentication):
+    """
+    Simple token based authentication.
+    Clients should authenticate by passing the token key in the "Authorization"
+    HTTP header, prepended with the string "Token ".  For example:
+        Authorization: Token 401f7ac837da42b97f613d789819ff93537bee6a
+    """
+
+    keyword = 'Token'
+    model = None
+
+    def get_authorization_header(self, request):
+        """
+        Return request's 'Authorization:' header, as a bytestring.
+        Hide some test client ickyness where the header can be unicode.
+        """
+        auth = request.META.get('HTTP_AUTHORIZATION', b'')
+        if isinstance(auth, str):
+            # Work around django test client oddness
+            auth = auth.encode(HTTP_HEADER_ENCODING)
+        return auth
+
+    def get_model(self):
+        if self.model is not None:
+            return self.model
+        from rest_framework.authtoken.models import Token
+        print(Token)
+        return Token
+
+    """
+    A custom token model may be used, but must have the following properties.
+    * key -- The string identifying the token
+    * user -- The user to which the token belongs
+    """
+
+    def authenticate(self, request):
+        auth = self.get_authorization_header(request).split()
+
+        if not auth or auth[0].lower() != self.keyword.lower().encode():
+            return None
+
+        if len(auth) == 1:
+            msg = _('Invalid token header. No credentials provided.')
+            raise exceptions.AuthenticationFailed(msg)
+        elif len(auth) > 2:
+            msg = _('Invalid token header. Token string should not contain spaces.')
+            raise exceptions.AuthenticationFailed(msg)
+
+        try:
+            token = auth[1]
+        except Exception as e:
+            msg = _('Invalid token header. Token string should not contain invalid characters.')
+            raise exceptions.AuthenticationFailed(msg)
+
+        return self.authenticate_credentials(token)
+
+    def authenticate_credentials(self, key):
+        model = self.get_model()
+        try:
+            #token = model.objects.select_related('user').get(key=key)
+            token = jwt.decode(key, jwt_secret, algorithms=['HS256'])
+            user = User.objects.get()
+          
+        except Exception as e:
+            print(Exception)
+            raise exceptions.AuthenticationFailed(_('Invalid token.'))
+
+        # if not token.user.is_active:
+            # raise exceptions.AuthenticationFailed(_('User inactive or deleted.'))
+        return (user, token)
+
+    def authenticate_header(self, request):
+        return self.keyword
+
 
 class login(APIView):
     '''
@@ -343,8 +432,11 @@ class service_request(APIView):
 
       <_This is where all uncertainties, commentary, discussion etc. can go. I recommend timestamping and identifying oneself when leaving comments here._>
     '''
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
 
     def post(self, request):
+        pprint(request.auth["user"])
 
         #serializing incoming data
         serializer = ServiceRequestSerializer(data=request.data)
@@ -359,96 +451,13 @@ class service_request(APIView):
           
           try:
             #process task and return response
-            return Response(task_handler_object(task).response, status.HTTP_200_OK)
+            response = task_handler_object(task).response
+            response["user"] = request.auth["user"]
+            return Response(response, status.HTTP_200_OK)
           except Exception as e:
             return Response({"error": str(e)}, status.HTTP_200_OK)
         return Response (serializer.errors, status.HTTP_200_OK)
 
-class ExampleAuthentication(authentication.BaseAuthentication):
-    def authenticate(self, request):
-        token = request.META.get('Authorization')
-        print(token)
-        # if not username:
-            # return None
-        try:
-            user = User.objects.get()
-        except User.DoesNotExist:
-            raise exceptions.AuthenticationFailed('No such user')
-        return (user, None)
-
-
-class TokenAuthentication(authentication.BaseAuthentication):
-    """
-    Simple token based authentication.
-    Clients should authenticate by passing the token key in the "Authorization"
-    HTTP header, prepended with the string "Token ".  For example:
-        Authorization: Token 401f7ac837da42b97f613d789819ff93537bee6a
-    """
-
-    keyword = 'Token'
-    model = None
-
-    def get_authorization_header(self, request):
-        """
-        Return request's 'Authorization:' header, as a bytestring.
-        Hide some test client ickyness where the header can be unicode.
-        """
-        auth = request.META.get('HTTP_AUTHORIZATION', b'')
-        if isinstance(auth, str):
-            # Work around django test client oddness
-            auth = auth.encode(HTTP_HEADER_ENCODING)
-        return auth
-
-    def get_model(self):
-        if self.model is not None:
-            return self.model
-        from rest_framework.authtoken.models import Token
-        print(Token)
-        return Token
-
-    """
-    A custom token model may be used, but must have the following properties.
-    * key -- The string identifying the token
-    * user -- The user to which the token belongs
-    """
-
-    def authenticate(self, request):
-        auth = self.get_authorization_header(request).split()
-
-        if not auth or auth[0].lower() != self.keyword.lower().encode():
-            return None
-
-        if len(auth) == 1:
-            msg = _('Invalid token header. No credentials provided.')
-            raise exceptions.AuthenticationFailed(msg)
-        elif len(auth) > 2:
-            msg = _('Invalid token header. Token string should not contain spaces.')
-            raise exceptions.AuthenticationFailed(msg)
-
-        try:
-            token = auth[1]
-        except Exception as e:
-            msg = _('Invalid token header. Token string should not contain invalid characters.')
-            raise exceptions.AuthenticationFailed(msg)
-
-        return self.authenticate_credentials(token)
-
-    def authenticate_credentials(self, key):
-        model = self.get_model()
-        try:
-            #token = model.objects.select_related('user').get(key=key)
-            token = jwt.decode(key, jwt_secret, algorithms=['HS256'])
-            user = User.objects.get()
-        except Exception as e:
-            print(Exception)
-            raise exceptions.AuthenticationFailed(_('Invalid token.'))
-
-        # if not token.user.is_active:
-            # raise exceptions.AuthenticationFailed(_('User inactive or deleted.'))
-        return (user, token)
-
-    def authenticate_header(self, request):
-        return self.keyword
 
 class public_page(APIView):
     '''
@@ -531,8 +540,10 @@ class public_page(APIView):
 
         #return details
         # return Response ({"Message":your_message}, status.HTTP_200_OK)
-    def get(self, request):
-      public_page_id = "5dd578bc0a2eee2604e88424"
+    def get(self, request, pageid=None):
+      if pageid is None:
+        return Response({"error": "page_id_missing", "details":"page is missing"}, status.HTTP_200_OK)
+      public_page_id = pageid
       client = pymongo.MongoClient(mongodb_url)
       db = client.test
       collection = db.public_pages
@@ -544,9 +555,17 @@ class public_page(APIView):
         #return not found error
         return Response({"status_code":"not_found", "default_description":"no such thing exits in the system"}, status=status.HTTP_200_OK)
       #serializer = PublicPageSerializer(PublicPage(document))
-      import pprint
-      pprint.pprint(document)
-      document["_id"] = str(document["_id"])
+      #import pprint
+      #pprint.pprint(document)
+      document["nuid"] = str(document["_id"])
+      del(document["_id"])
+      document["lastest_events"] = [
+        { "title": "News: CSE BRUR started using IMS system.", "details_link": "#" },
+        { "title": "Event: Inter batch programming contest on sunday, 9th oct.", "details_link": "#" },
+        { "title": "Circular: Admission is open", "details_link": "#" },
+        { "title": "Notice: New Policy for Scholarship.", "details_link": "#" }
+      ]
+
       return Response(document, status.HTTP_200_OK)
 
     def post(self, request, format=None):
@@ -554,29 +573,7 @@ class public_page(APIView):
         serializer = PublicPageSerializer(data=request.data)
 
         #get user from session_id
-        '''
-        page: {
-      nuid: 1231,
-      sid: "begum_rokey_univ",
-      title: "Department of Computer Science and Engineering",
-      subtitle: "One of the Departments at Begum Rokeya University, Rangpur",
-      contact: "",
-      short_description: "",
-      quick_overview: "It is founded in 2008. At present 250 students are enrolled in this discipline. There are 10 world class faculty memebers.",
-      lastest_events: [
-        { title: "News: CSE BRUR started using IMS system.", details_link: "#" },
-        { title: "Event: Inter batch programming contest on sunday, 9th oct.", details_link: "#" },
-        { title: "Circular: Admission is open", details_link: "#" },
-        { title: "Notice: New Policy for Scholarship.", details_link: "#" }
-      ],
-      sections: [
-        { nuid: 1, comid: "contact", description: "Contact us" },
-        { nuid: 2, comid: "gallery", description: "Visit galleries" },
-        { nuid: 3, comid: "events", description: "Show events" },
-        { nuid: 4, comid: "notices", description: "Can't find what I'm looking for." }
-      ]
-    }
-        '''
+        
         #store the data in database
         if serializer.is_valid():
             #serializer data for database
@@ -595,7 +592,6 @@ class public_page(APIView):
                 return Response({"status_code":"registration_failed", "default_description":"already exist", "id": str(found_page["_id"])}, status=status.HTTP_200_OK)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
         #return status message
-
 
 class NoyonIOView(APIView):
     def get(self,request):
@@ -619,10 +615,6 @@ class NoyonIOView(APIView):
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 class Search(APIView):
-    '''need password'''
-    pass
-
-class Login(APIView):
     '''need password'''
     pass
 
