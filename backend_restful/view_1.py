@@ -213,76 +213,6 @@ class login(APIView):
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 
-class services(APIView):
-    '''
-    **Show Noyon2View**
-    ----
-      <_Additional information about your API call. Try to use verbs that match both request type (fetching vs modifying) and plurality (one vs multiple)._>
-
-    * **URL**
-
-      <_The URL Structure (path only, no root url)_>
-
-    * **Method:**
-
-      <_The request type_>
-
-      `GET` | `POST` | `HEAD` | `OPTIONS`
-
-    *  **URL Params**
-
-       <_If URL params exist, specify them in accordance with name mentioned in URL section. Separate into optional and required. Document data constraints._>
-
-       **Required:**
-
-       `id=[integer]`
-
-       **Optional:**
-
-       `photo_id=[alphanumeric]`
-
-    * **Data Params**
-
-      <_If making a post request, what should the body payload look like? URL Params rules apply here too._>
-
-    * **Success Response:**
-
-      <_What should the status code be on success and is there any returned data? This is useful when people need to to know what their callbacks should expect!_>
-
-      * **Code:** 200 <br />
-        **Content:** `{ id : 12 }`
-
-    * **Error Response:**
-
-      <_Most endpoints will have many ways they can fail. From unauthorized access, to wrongful parameters etc. All of those should be liste d here. It might seem repetitive, but it helps prevent assumptions from being made where they should be._>
-
-      * **Code:** 401 UNAUTHORIZED <br />
-        **Content:** `{ error : "Noyon2View" }`
-
-      OR
-
-      * **Code:** 422 UNPROCESSABLE ENTRY <br />
-        **Content:** `{ error : "Can't Connect to server" }`
-
-    * **Sample Call:**
-
-      <_Just a sample call to your endpoint in a runnable format ($.ajax call or a curl request) - this makes life easier and more predictable._>
-
-    * **Notes:**
-
-      <_This is where all uncertainties, commentary, discussion etc. can go. I recommend timestamping and identifying oneself when leaving comments here._>
-    '''
-    def get(self,request):
-        #query database
-
-        #return a list of services
-
-        serializer = Noyon2Serializer(Noyon2())
-        return Response (serializer.data, status.HTTP_200_OK)
-    def post(self, request):
-        serializer = Noyon2Serializer(Noyon2())
-        return Response (serializer.data, status.HTTP_200_OK)
-
 class register(APIView):
     '''
     **Register New User**
@@ -451,12 +381,14 @@ class service_request(APIView):
           
           try:
             #process task and return response
+            data = task
+            data["user_info"] = request.auth["user"]
             response = task_handler_object(task).response
-            response["user"] = request.auth["user"]
+            #response["user"] = request.auth["user"]
             return Response(response, status.HTTP_200_OK)
           except Exception as e:
             return Response({"error": str(e)}, status.HTTP_200_OK)
-        return Response (serializer.errors, status.HTTP_200_OK)
+        return Response(serializer.errors, status.HTTP_200_OK)
 
 
 class public_page(APIView):
@@ -643,39 +575,73 @@ class Registration(APIView):
     pass
 
 class services(APIView):
+    #imposing authentication
+    authentication_classes = [TokenAuthentication]
+    permission_classes = [IsAuthenticated]
+    
     def get(self,request):
-        availableService = [AvailableServices(id = '1', title = 'Available Service 1', description = 'Service description 1'),
-                            AvailableServices(id = '2', title = 'Available Service 2', description = 'Service description 2'),
-                            AvailableServices(id = '3', title = 'Available Service 3', description = 'Service description 3'),
-                            AvailableServices(id = '4', title = 'Available Service 4', description = 'Service description 4')]
-        available_serializer = ServicesSerializer(availableService, many=True)
 
-        subscribedService = [SubscribedServices(id = '1', title = 'Subscribed Service 1', description = 'Service description 1'),
-                            SubscribedServices(id = '2', title = 'Subscribed Service 2', description = 'Service description 2'),
-                            SubscribedServices(id = '3', title = 'Subscribed Service 3', description = 'Service description 3'),
-                            SubscribedServices(id = '4', title = 'Subscribed Service 4', description = 'Service description 4')]
+        #defining static available services
+        availableService = [
+          AvailableServices(id = '1', title = 'Available Service 1', description = 'Service description 1'),
+          AvailableServices(id = '2', title = 'Available Service 2', description = 'Service description 2'),
+          AvailableServices(id = '3', title = 'Available Service 3', description = 'Service description 3'),
+          AvailableServices(id = '4', title = 'Available Service 4', description = 'Service description 4')
+        ]
+
+        #serializing for response
+        available_serializer = ServicesSerializer(availableService, many=True)
+        
+        #query user for subscribed services
+        user_id = request.auth["user"]
+        client = pymongo.MongoClient(mongodb_url)
+        db = client.test
+        users = db.users
+
+        #query if already exist
+        found_user = users.find_one({"_id":user_id}, {"subscribed_services":1})
+
+        subscribedService = [
+          SubscribedServices(id = '1', title = 'Subscribed Service 1', description = 'Service description 1'),
+          SubscribedServices(id = '2', title = 'Subscribed Service 2', description = 'Service description 2'),
+          SubscribedServices(id = '3', title = 'Subscribed Service 3', description = 'Service description 3'),
+          SubscribedServices(id = '4', title = 'Subscribed Service 4', description = 'Service description 4')
+        ]
         subscribed_serializer = ServicesSerializer(subscribedService, many=True)
-        return Response ({"AvailableServices":available_serializer.data, "SubscribedServices":subscribed_serializer.data}, status.HTTP_200_OK)
+        
+        return Response ({"AvailableServices":available_serializer.data, "SubscribedServices":found_user}, status.HTTP_200_OK)
 
     def post(self,request):
-        subscribedService = [SubscribedServices(id = '1', title = 'Subscribed Service 1', description = 'Service description 1'),
-                            SubscribedServices(id = '2', title = 'Subscribed Service 2', description = 'Service description 2'),
-                            SubscribedServices(id = '3', title = 'Subscribed Service 3', description = 'Service description 3'),
-                            SubscribedServices(id = '4', title = 'Subscribed Service 4', description = 'Service description 4')]
+        subscribedService = [
+          SubscribedServices(id = '1', title = 'Subscribed Service 1', description = 'Service description 1'),
+          SubscribedServices(id = '2', title = 'Subscribed Service 2', description = 'Service description 2'),
+          SubscribedServices(id = '3', title = 'Subscribed Service 3', description = 'Service description 3'),
+          SubscribedServices(id = '4', title = 'Subscribed Service 4', description = 'Service description 4')
+        ]
         subscribed_serializer = ServicesSerializer(subscribedService, many=True)
         #serializer data for database
         #database instance
+        user_id = request.auth["user"]
         client = pymongo.MongoClient(mongodb_url)
         db = client.test
-        subscribed_services = db.subscribed_services
+        users = db.users
+        
+        #if subscribed_serializer.is_valid():
+        #print("valid")
+        res = users.update_one({"_id":user_id}, {"$set": {"subscribed_services":subscribed_serializer.data}}, upsert=False)
+
+        #client = pymongo.MongoClient(mongodb_url)
+        #db = client.test
+        #subscribed_services = db.subscribed_services
+        
         #just inserting the first data for testing
-        first_data = subscribed_serializer.data[0]
-        found_subscribed_services = subscribed_services.find_one({"id": first_data.get("id"), "title": first_data.get("title"), "description":first_data.get("description")})
-        if(found_subscribed_services is None):
-            post_id = subscribed_services.insert_one(first_data).inserted_id
+        #first_data = subscribed_serializer.data[0]
+        #found_subscribed_services = subscribed_services.find_one({"id": first_data.get("id"), "title": first_data.get("title"), "description":first_data.get("description")})
+        if(res.matched_count > 0):
+            #post_id = subscribed_services.insert_one(first_data).inserted_id
             return Response({"status_code":"subscribed_services_added_successfull",
-"default_description":"successfully added the subscribed servics", "id": str(post_id)}, status=status.HTTP_200_OK)
+"default_description":"successfully added the subscribed servics", "id": str(1)}, status=status.HTTP_200_OK)
         else:
             return Response({"status_code":"Subscribed_ervices_failed",
-"default_description":"already exist", "id": str(found_subscribed_services["_id"])}, status=status.HTTP_200_OK)
+"default_description":"already exist", "id": str()}, status=status.HTTP_200_OK)
         return Response(subscribed_serializer.errors,status=status.HTTP_400_BAD_REQUEST)

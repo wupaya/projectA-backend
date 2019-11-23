@@ -56,6 +56,7 @@ class SubscribedServices(object):
         self.id = id
         self.title = title
         self.description = description
+        
 class ServiceRequest(object):
     service_name = "This is a service name"
     task_name = "This is a task name"
