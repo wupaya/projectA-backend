@@ -1,0 +1,12 @@
+associations
+
+
+
+
+
+designations: [
+    parent:[
+        tag1:[notification],
+        tag2:[show_result]
+    ]
+]

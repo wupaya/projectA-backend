@@ -20,6 +20,7 @@ from rest_framework import HTTP_HEADER_ENCODING, exceptions
 from django.utils.translation import gettext_lazy as _
 import importlib
 from pprint import pprint
+from bson.objectid import ObjectId
 
 
 mongodb_url = "mongodb+srv://anamika:1234@cluster0-t3qae.mongodb.net/test?retryWrites=true"
@@ -191,10 +192,18 @@ class login(APIView):
             users = db.users
 
             #query if already exist
-            found_user = users.find_one({"$and":[{"email": serializer.validated_data.get("email")},{"password": serializer.validated_data.get("password")}]})
+            found_user = users.find_one(
+              {"$and":[
+                {"email": serializer.validated_data.get("email")},
+                {"password": serializer.validated_data.get("password")}
+              ]},
+              {
+                "subscribed_services":1,
+                "_id":1,
+                "recent_tasks": 1
+              }
+            )
             if(found_user is not None):
-
-
                 session_object = {
                     "user": str(found_user),
                     "expired_datetime" : datetime.utcnow()
@@ -204,9 +213,13 @@ class login(APIView):
 
                 jwt_payload = {'user': str(found_user["_id"]),
                 'session_id':str(session.inserted_id)}
-                login_object = {"token": jwt.encode(jwt_payload, jwt_secret, algorithm='HS256')}
+                login_object = {
+                  "token": jwt.encode(jwt_payload, jwt_secret, algorithm='HS256'),
+                  "subscribed_services" : found_user.get("subscribed_services", []),
+                  "recent_tasks": found_user.get("recent_tasks", [])
+                }
                 return Response({"status_code":"login_successfull",
-    "default_description":"successfully registered", "data": login_object}, status=status.HTTP_201_CREATED)
+    "default_description":"Login Successfull", "data": login_object}, status=status.HTTP_201_CREATED)
             else:
                 return Response({"status_code":"login_failed",
     "default_description":"user not found"}, status=status.HTTP_201_CREATED)
@@ -479,7 +492,6 @@ class public_page(APIView):
       client = pymongo.MongoClient(mongodb_url)
       db = client.test
       collection = db.public_pages
-      from bson.objectid import ObjectId
       #query if already exist
       document = collection.find_one({"_id": ObjectId(public_page_id)})
 
@@ -613,22 +625,24 @@ class services(APIView):
 
     def post(self,request):
         subscribedService = [
-          SubscribedServices(id = '1', title = 'Subscribed Service 1', description = 'Service description 1'),
-          SubscribedServices(id = '2', title = 'Subscribed Service 2', description = 'Service description 2'),
-          SubscribedServices(id = '3', title = 'Subscribed Service 3', description = 'Service description 3'),
-          SubscribedServices(id = '4', title = 'Subscribed Service 4', description = 'Service description 4')
+          SubscribedServices(id = 1, title = 'Education', description = 'Service description 1'),
+          SubscribedServices(id = 2, title = 'Health', description = 'Service description 2'),
+          SubscribedServices(id = 3, title = 'Business', description = 'Service description 3'),
+          SubscribedServices(id = 4, title = 'Propritory', description = 'Service description 4')
         ]
         subscribed_serializer = ServicesSerializer(subscribedService, many=True)
         #serializer data for database
         #database instance
         user_id = request.auth["user"]
+        pprint(user_id)
         client = pymongo.MongoClient(mongodb_url)
         db = client.test
         users = db.users
         
         #if subscribed_serializer.is_valid():
         #print("valid")
-        res = users.update_one({"_id":user_id}, {"$set": {"subscribed_services":subscribed_serializer.data}}, upsert=False)
+        #print("user id: " + user_id)
+        res = users.update_one({"_id":ObjectId(user_id)}, {"$set": {"subscribed_services":subscribed_serializer.data}}, upsert=False)
 
         #client = pymongo.MongoClient(mongodb_url)
         #db = client.test
@@ -639,9 +653,7 @@ class services(APIView):
         #found_subscribed_services = subscribed_services.find_one({"id": first_data.get("id"), "title": first_data.get("title"), "description":first_data.get("description")})
         if(res.matched_count > 0):
             #post_id = subscribed_services.insert_one(first_data).inserted_id
-            return Response({"status_code":"subscribed_services_added_successfull",
-"default_description":"successfully added the subscribed servics", "id": str(1)}, status=status.HTTP_200_OK)
+            return Response({"status_code":"subscribed_services_added_successfull", "default_description":"successfully added the subscribed servics", "id": str(1)}, status=status.HTTP_200_OK)
         else:
-            return Response({"status_code":"Subscribed_ervices_failed",
-"default_description":"already exist", "id": str()}, status=status.HTTP_200_OK)
-        return Response(subscribed_serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+            return Response({"status_code":"Subscribed_ervices_failed", "default_description":"already exist", "id": str()}, status=status.HTTP_200_OK)
+        return Response(subscribed_serializer.errors, status=status.HTTP_400_BAD_REQUEST)
