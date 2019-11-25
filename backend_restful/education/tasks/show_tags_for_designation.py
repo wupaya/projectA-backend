@@ -16,8 +16,9 @@ class dashboard:
         user_id = data.get("user_info")
         pprint(user_id)
         query_result = education.find_one(
-              {"_id" : ObjectId(user_id)},
-              {"_id":1, "associated":1}
+              {"_id" : ObjectId(user_id), "associated": {"$elemMatch":{"_id": data.get(associated),"$elemMatch":{"designation":"parent"}},""},
+              {"_id":1,
+              "tags":1}
         )
 
         #this is to avoid ObjectId not serializer error
@@ -44,5 +45,7 @@ class dashboard:
         #{"_id":ObjectId(user_id)}
         #post_id = education.insert_one(query_result).inserted_id
         
+
+
 
         self.response=query_result
