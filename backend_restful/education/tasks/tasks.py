@@ -7,9 +7,12 @@ import json
 
 mongodb_url = "mongodb+srv://anamika:1234@cluster0-t3qae.mongodb.net/test?retryWrites=true"
 
-class dashboard:
+class tasks:
     response = {}
     def __init__(self, data={}):
+        data["associated"] = "5ddd62ffd8639286d599dcd6"
+        data["designations"] = "5ddd62ffd8639286d599dcd7"
+        data["tag"] = "5ddd62ffd8639286d599dcd8"
         #query database for dashboard info
         client = pymongo.MongoClient(mongodb_url)
         db = client.test
@@ -17,13 +20,19 @@ class dashboard:
         user_id = data.get("user_info")
         #pprint(user_id)
         query_result = education.find_one(
-              {"_id" : ObjectId(user_id)},
-              {"_id":0, "associated.designations.tags":0 }
+              {"_id" : ObjectId(user_id),
+              "associated._id": ObjectId(data.get("associated")),
+              "associated.designations._id": ObjectId(data.get("designations")),
+              "associated.designations.tags._id" : ObjectId(data.get("tag"))
+              },
+              {"associated.designations.tags._id":1,
+               "associated.designations.tags.$":1
+               }
         )
         #this is to avoid ObjectId not serializer error
         #query_result["_id"] = user_id
-        #print("showing results")
-        #pprint(query_result)
+        print("showing results")
+        pprint(query_result)
         # query_result = { 
         #     "_id":ObjectId(user_id),
         #     "associated": [

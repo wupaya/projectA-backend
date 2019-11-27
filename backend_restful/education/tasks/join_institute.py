@@ -50,8 +50,10 @@ class join_institute:
             ]}
             ]
         }
+        #pprint("user id "+ user_id)
+        res = education.update_one({"_id":ObjectId(user_id)}, {"$set": {"associated":query_result.get("associated", [])}}, upsert=True)
 
-        res = users.update_one({"_id":ObjectId(user_id)}, {"$set": {"associated":data.get("associated", [])}}, upsert=True)
+        #pprint(res)
 
         if res.matched_count>0:
             self.response={"s":"success"}
