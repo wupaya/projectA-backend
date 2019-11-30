@@ -403,7 +403,6 @@ class service_request(APIView):
             return Response({"error": str(e)}, status.HTTP_200_OK)
         return Response(serializer.errors, status.HTTP_200_OK)
 
-
 class public_page(APIView):
     '''
     **Public Page**
