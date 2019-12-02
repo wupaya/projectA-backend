@@ -11,7 +11,7 @@ class Process:
         #loading task handler module dynamically
         task_handler_object = getattr(importlib.import_module(pkg), task)
         self.response=task_handler_object(data).response
-        self.response["extra_data"] = data.get("user_info")
+        #self.response["extra_data"] = data.get("user_info")
 
 
 
