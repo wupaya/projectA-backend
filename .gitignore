@@ -1,1 +1,4 @@
 /.vscode/
+/backend_restful/docs/_build/
+/backend_restful/docs/_static/
+/backend_restful/docs/_templates/
