@@ -7,7 +7,7 @@ import json
 
 mongodb_url = "mongodb+srv://anamika:1234@cluster0-t3qae.mongodb.net/test?retryWrites=true"
 
-class dashboard:
+class get_associated_institues:
     response = {}
     def __init__(self, data={}):
         #query database for dashboard info
