@@ -115,60 +115,7 @@ class TokenAuthentication(authentication.BaseAuthentication):
 
 
 class login(APIView):
-    '''
-    **Handle user authentication**
-    ----
-      user will provide email and password and get a session token on match
-
-    * **URL**
-
-      /login
-
-    * **Method:**
-
-      `POST`
-
-    *  **URL Params**
-
-       no ulr params
-
-    * **Data Params**
-
-    **Required:**
-
-       `email=[string]`
-       `password=[string]`
-
-    * **Success Response:**
-
-      * **status_code:** login_successfull <br />
-      * **default_description:** successfully registered <br />
-        **data:** `{'token': b'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoiNWQ1YWU0MjExMzYxNGI0ZjcxODU2ZmQ5Iiwic2Vzc2lvbl9pZCI6IjVkNjBiYzE2Zjc1ZjhkZjcxYzQxYmE2YSJ9.ngxcHBHQ9NZQlIT9VKRgUEuGxiyvBl-WRRr7N2sKjYg'}`
-
-    * **Error Response:**
-
-        **status_code:** login_failed <br />
-            **default_description:** user not found
-
-    * **Sample Call:**
-
-      ```javascript
-    $.ajax({
-        url: "/login",
-        dataType: "json",
-        type : "POST",
-        contentType: 'application/json',
-        data: JSON.stringify( { "email": "mhsn06@gmail.com", "password": "1234" }),
-        success : function(r) {
-            console.log(r);
-        }
-    });
-    ```
-
-    * **Notes:**
-
-      It's still under development
-    '''
+    
     # def get(self,request):
         # validate request data with serializer
 
@@ -227,68 +174,7 @@ class login(APIView):
 
 
 class register(APIView):
-    '''
-    **Register New User**
-    ----
-      Register a user
-
-    * **URL**
-
-      /register
-
-    * **Method:**
-
-      `POST`
-
-    * **URL Params**
-
-       No Params
-
-
-    * **Data Params**
-
-        `email=string`
-
-        `password=string`
-
-        `name=string`
-
-        `phone_no=string`
-
-
-    * **Success Response:**
-
-
-      * **status_code:** registration_successfull <br />
-        **default_description:** `successfully registered`
-        **id:** `5d60ce0ee8dc7a242d323337`
-
-    * **Error Response:**
-
-      * **status_code:** registration_failed <br />
-        **default_description:** `already registered`
-        **id:** `5d60ce0ee8dc7a242d323337`
-
-    * **Sample Call:**
-
-      ```javascript
-    $.ajax({
-        url: "/register",
-        dataType: "json",
-        type : "POST",
-        contentType: 'application/json',
-        data: JSON.stringify( { "email": "mhsn06@gmail.com", "password": "1234","name":"hassan", "phone_no":"01737343005" }),
-        success : function(r) {
-            console.log(r);
-        }
-    });
-    ```
-
-    * **Notes:**
-
-      It's still under development.
-    '''
-
+    
     def get(self,request):
         #serializer = Noyon3Serializer(Noyon3())
         return Response ({}, status.HTTP_200_OK)
@@ -317,64 +203,7 @@ class register(APIView):
         #return status
 
 class service_request(APIView):
-    '''
-    **Show Noyon4View**
-    ----
-      <_Additional information about your API call. Try to use verbs that match both request type (fetching vs modifying) and plurality (one vs multiple)._>
-
-    * **URL**
-
-      <_The URL Structure (path only, no root url)_>
-
-    * **Method:**
-
-      <_The request type_>
-
-      `GET` | `POST` | `HEAD` | `OPTIONS`
-
-    *  **URL Params**
-
-       <_If URL params exist, specify them in accordance with name mentioned in URL section. Separate into optional and required. Document data constraints._>
-
-       **Required:**
-
-       `id=[integer]`
-
-       **Optional:**
-
-       `photo_id=[alphanumeric]`
-
-    * **Data Params**
-
-      <_If making a post request, what should the body payload look like? URL Params rules apply here too._>
-
-    * **Success Response:**
-
-      <_What should the status code be on success and is there any returned data? This is useful when people need to to know what their callbacks should expect!_>
-
-      * **Code:** 200 <br />
-        **Content:** `{ id : 12 }`
-
-    * **Error Response:**
-
-      <_Most endpoints will have many ways they can fail. From unauthorized access, to wrongful parameters etc. All of those should be liste d here. It might seem repetitive, but it helps prevent assumptions from being made where they should be._>
-
-      * **Code:** 401 UNAUTHORIZED <br />
-        **Content:** `{ error : "Noyon4View" }`
-
-      OR
-
-      * **Code:** 422 UNPROCESSABLE ENTRY <br />
-        **Content:** `{ error : "Can't Connect to server" }`
-
-    * **Sample Call:**
-
-      <_Just a sample call to your endpoint in a runnable format ($.ajax call or a curl request) - this makes life easier and more predictable._>
-
-    * **Notes:**
-
-      <_This is where all uncertainties, commentary, discussion etc. can go. I recommend timestamping and identifying oneself when leaving comments here._>
-    '''
+    
     authentication_classes = [TokenAuthentication]
     permission_classes = [IsAuthenticated]
 
@@ -404,73 +233,6 @@ class service_request(APIView):
         return Response(serializer.errors, status.HTTP_200_OK)
 
 class public_page(APIView):
-    '''
-    **Public Page**
-    ----
-      Register and manage public page
-
-    * **URL**
-
-      /public_page
-
-    * **Method:**
-
-      `POST`
-
-    *  **URL Params**
-
-       No Params
-
-    * **Data Params**
-
-      `page_title=string`
-      `type_of_institute=string`
-      `founding_date=string`
-      `address_district=string`
-      `address_upozila=string`
-      `no_of_stakeholder=string`
-      `description=string`
-
-    * **Success Response:**
-
-      * **status_code:** page_creation_successfull
-      * **default_description:** successfully created page
-        **id:** `5d60d59ff0626c6be06ec94c`
-
-    * **Error Response:**
-
-      * **status_code:** registration_failed <br />
-        **default_description:** `already exist`
-        **id:** `5d5beb87fe6518dd9565243b`
-
-    * **Sample Call:**
-
-      ```javascript
-    $.ajax({
-        url: "/public_page",
-        dataType: "json",
-        type : "POST",
-        contentType: 'application/json',
-        data: JSON.stringify( {
-            "page_title":"begum rokeya university, rangpur",
-            "type_of_institute": "university",
-            "founding_date":"2008",
-            "address_district":"rangpur",
-            "address_upozila":"sadar",
-            "no_of_stakeholder":"20",
-            "description":"this is a test page"
-        }),
-        success : function(r) {
-            console.log(r);
-        }
-    });
-    ```
-
-    * **Notes:**
-
-      Requires authentication
-    '''
-
 
     authentication_classes = [TokenAuthentication]
     #permission_classes = [IsAuthenticated]
