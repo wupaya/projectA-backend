@@ -2,19 +2,43 @@ from backend_restful.db import users
 import pymongo
 from bson.objectid import ObjectId
 from pprint import pprint
+from .task_serializer import JoinInstituteSerializer
 
 mongodb_url = "mongodb+srv://anamika:1234@cluster0-t3qae.mongodb.net/test?retryWrites=true"
 
 class join_institute:
     response = {}
     def __init__(self, data={}):
+
+        serializer = JoinInstituteSerializer(data=data)
+
+        if serializer.is_valid():
+            public_page_id = serializer.validated_data.get("institute_id")
+            designations = serializer.validated_data.get("designations")
+
         #query database for dashboard info
         #str(users.find_one({"$and":[{"email": "mhsn06@gmail.com"},{"password": "1234"}]}))
         client = pymongo.MongoClient(mongodb_url)
         db = client.test
         education = db.education
         user_id = data.get("user_info")
-        #pprint(user_id)
+        public_pages = db.public_pages
+        #query if already exist
+        ppageid = public_pages.find_one({"_id": ObjectId(public_page_id)})
+
+        if(ppageid is None):
+        #return not found error
+        return Response({"status_code":"page_not_found", "default_description":"no such thing exits in the system"}, status=status.HTTP_200_OK)
+
+        found_public_page = public_pages.find_one(
+              {"$and":[
+                {"page_title": serializer.validated_data.get("page_title")},
+                {"type_of_institute": serializer.validated_data.get("type_of_institute")}
+              ]})
+
+
+
+
 
 
         #this is to avoid ObjectId not serializer error
