@@ -16,71 +16,65 @@ class join_institute:
             public_page_id = serializer.validated_data.get("institute_id")
             designations = serializer.validated_data.get("designations")
 
-        #query database for dashboard info
-        #str(users.find_one({"$and":[{"email": "mhsn06@gmail.com"},{"password": "1234"}]}))
-        client = pymongo.MongoClient(mongodb_url)
-        db = client.test
-        education = db.education
-        user_id = data.get("user_info")
-        public_pages = db.public_pages
-        #query if already exist
-        ppageid = public_pages.find_one({"_id": ObjectId(public_page_id)})
+            #query database for dashboard info
+            #str(users.find_one({"$and":[{"email": "mhsn06@gmail.com"},{"password": "1234"}]}))
+            client = pymongo.MongoClient(mongodb_url)
+            db = client.test
+            education = db.education
+            user_id = data.get("user_info")
+            public_pages = db.public_pages
+            #query if already exist
+            ppageid = public_pages.find_one({"_id": ObjectId(public_page_id)})
 
-        if(ppageid is None):
-        #return not found error
-        return Response({"status_code":"page_not_found", "default_description":"no such thing exits in the system"}, status=status.HTTP_200_OK)
+            if(ppageid is None):
+            #return not found error
+            return Response({"status_code":"page_not_found", "default_description":"no such thing exits in the system"}, status=status.HTTP_200_OK)
 
-        found_public_page = public_pages.find_one(
-              {"$and":[
-                {"page_title": serializer.validated_data.get("page_title")},
-                {"type_of_institute": serializer.validated_data.get("type_of_institute")}
-              ]})
+            designation = ppageid.get("designation")
+            page_title = ppageid.get("page_title")
+            page_description = ppageid.get("description")
+            page_type = ppageid.get("type_of_institute")
 
-
-
-
-
-
-        #this is to avoid ObjectId not serializer error
-        #query_result["_id"] = user_id
-        query_result = { 
-            "_id":ObjectId(user_id),
-            "associated": [
-            {"_id": ObjectId(), "short_name":"BRUR", "long_name":"Begum Rokeya University, Rangpur", "designations":[
-                {"_id": ObjectId(), "title":"Parent", "tags":[
-                    {"_id":ObjectId(), "title":"", "tasks":[
-                        {"_id":ObjectId(), "title":""},
-                        {"_id":ObjectId(), "title":""},
-                        {"_id":ObjectId(), "title":""},
+            #this is to avoid ObjectId not serializer error
+            #query_result["_id"] = user_id
+            query_result = { 
+                "_id":ObjectId(user_id),
+                "associated": [
+                {"_id": ObjectId(), "short_name":"BRUR", "long_name":"Begum Rokeya University, Rangpur", "designations":[
+                    {"_id": ObjectId(), "title":"Parent", "tags":[
+                        {"_id":ObjectId(), "title":"", "tasks":[
+                            {"_id":ObjectId(), "title":""},
+                            {"_id":ObjectId(), "title":""},
+                            {"_id":ObjectId(), "title":""},
+                        ]},
+                        {"_id":ObjectId(), "title":"", "tasks":[
+                            {"_id":ObjectId(), "title":""},
+                            {"_id":ObjectId(), "title":""},
+                            {"_id":ObjectId(), "title":""},
+                        ]},
                     ]},
-                    {"_id":ObjectId(), "title":"", "tasks":[
-                        {"_id":ObjectId(), "title":""},
-                        {"_id":ObjectId(), "title":""},
-                        {"_id":ObjectId(), "title":""},
-                    ]},
-                ]},
-                {"_id": ObjectId(), "title":"Teacher", "tags":[
-                    {"_id":ObjectId(), "title":"", "tasks":[
-                        {"_id":ObjectId(), "title":""},
-                        {"_id":ObjectId(), "title":""},
-                        {"_id":ObjectId(), "title":""},
-                    ]},
-                    {"_id":ObjectId(), "title":"", "tasks":[
-                        {"_id":ObjectId(), "title":""},
-                        {"_id":ObjectId(), "title":""},
-                        {"_id":ObjectId(), "title":""},
-                    ]},
+                    {"_id": ObjectId(), "title":"Teacher", "tags":[
+                        {"_id":ObjectId(), "title":"", "tasks":[
+                            {"_id":ObjectId(), "title":""},
+                            {"_id":ObjectId(), "title":""},
+                            {"_id":ObjectId(), "title":""},
+                        ]},
+                        {"_id":ObjectId(), "title":"", "tasks":[
+                            {"_id":ObjectId(), "title":""},
+                            {"_id":ObjectId(), "title":""},
+                            {"_id":ObjectId(), "title":""},
+                        ]},
+                    ]}
                 ]}
-            ]}
-            ]
-        }
-        #pprint("user id "+ user_id)
-        res = education.update_one({"_id":ObjectId(user_id)}, {"$set": {"associated":query_result.get("associated", [])}}, upsert=True)
+                ]
+            }
+            #pprint("user id "+ user_id)
+            res = education.update_one({"_id":ObjectId(user_id)}, {"$set": {"associated":query_result.get("associated", [])}}, upsert=True)
 
-        #pprint(res)
+            #pprint(res)
 
-        if res.matched_count>0:
-            self.response={"s":"success"}
-        
+            if res.matched_count>0:
+                self.response={"s":"success"}
+            
 
-        self.response={"s":"fail"}
+            self.response={"s":"fail"}
