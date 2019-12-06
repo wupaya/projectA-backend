@@ -31,9 +31,6 @@ class join_institute:
             return Response({"status_code":"page_not_found", "default_description":"no such thing exits in the system"}, status=status.HTTP_200_OK)
 
             stored_designations = [ppageid.get("designation")]
-
-            if(lenght<=0):
-                return Response({"status_code":"designation_error", "default_description":"no matched designation found"}, status=status.HTTP_200_OK)
             
             matched_designations = []
 
