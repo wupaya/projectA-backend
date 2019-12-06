@@ -30,17 +30,12 @@ class join_institute:
             #return not found error
             return Response({"status_code":"page_not_found", "default_description":"no such thing exits in the system"}, status=status.HTTP_200_OK)
 
-            designation = ppageid.get("designation")
-            page_title = ppageid.get("page_title")
-            page_description = ppageid.get("description")
-            page_type = ppageid.get("type_of_institute")
-
             #this is to avoid ObjectId not serializer error
             #query_result["_id"] = user_id
             query_result = { 
                 "_id":ObjectId(user_id),
                 "associated": [
-                {"_id": ObjectId(), "short_name":"BRUR", "long_name":"Begum Rokeya University, Rangpur", "designations":[
+                {"_id": ObjectId(), "long_name": ppageid.get("page_title"), "page_type": ppageid.get("type_of_institute"), "description": ppageid.get("description"), "designations":[
                     {"_id": ObjectId(), "title":"Parent", "tags":[
                         {"_id":ObjectId(), "title":"", "tasks":[
                             {"_id":ObjectId(), "title":""},
