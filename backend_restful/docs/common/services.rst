@@ -1,5 +1,5 @@
 ==========
-services
+/services
 ==========
 
 Get Available Services and Subscribed Services

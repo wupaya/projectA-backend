@@ -10,6 +10,8 @@ Welcome to backend's documentation!
    :maxdepth: 2
    :caption: Contents:
 
+
+   edu_service/database
    edu_service/service_requests/service_request
    common/register
    common/login

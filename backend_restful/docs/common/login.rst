@@ -1,5 +1,5 @@
 ==========
-login
+/login
 ==========
 
 user will provide email and password and get a session token on match

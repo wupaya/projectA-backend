@@ -1,5 +1,5 @@
 ==========
-public_page
+/public_page
 ==========
 
 Register and manage public page

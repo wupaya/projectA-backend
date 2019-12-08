@@ -1,5 +1,5 @@
 ==========
-register
+/register
 ==========
 
 Register a user
