@@ -5,5 +5,6 @@ Database
    :maxdepth: 2
    :caption: Database Index:
 
-   edu_database/public_page
    edu_database/education
+   edu_database/public_page
+   
