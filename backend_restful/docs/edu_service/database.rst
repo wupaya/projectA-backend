@@ -6,3 +6,4 @@ Database
    :caption: Database Index:
 
    edu_database/public_page
+   edu_database/education
