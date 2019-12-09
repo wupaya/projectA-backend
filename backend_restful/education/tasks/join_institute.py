@@ -30,24 +30,24 @@ class join_institute:
             #return not found error
             return Response({"status_code":"page_not_found", "default_description":"no such thing exits in the system"}, status=status.HTTP_200_OK)
 
-            stored_designations = [ppageid.get("designation")]
+            stored_designations = ppageid.get("designation") 
             
             matched_designations = []
 
-            foreach designations in incoming_designations:
-                foreach designation in stored_designations:
+            for designations in incoming_designations:
+                for designation in stored_designations:
 
                     if(designations==designation):
                         matched_designations.append(designation)
             #this is to avoid ObjectId not serializer error
             #query_result["_id"] = user_id
-            query_result = { 
+            associate_institute_document_object = { 
                 "_id":ObjectId(user_id),
                 "associated": [
-                {"_id": ObjectId(), "long_name": ppageid.get("page_title"), "page_type": ppageid.get("type_of_institute"), "description": ppageid.get("description"), "designations": matched_designations
+                {"_id": ObjectId(), "long_name": ppageid.get("page_title"), "description": ppageid.get("description"), "designations": matched_designations
             }
             #pprint("user id "+ user_id)
-            res = education.update_one({"_id":ObjectId(user_id)}, {"$set": {"associated":query_result.get("associated", [])}}, upsert=True)
+            res = education.update_one({"_id":ObjectId(user_id)}, {"$push": {"associated":associate_institute_document_object}}, upsert=True)
 
             #pprint(res)
 
