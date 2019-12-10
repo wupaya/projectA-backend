@@ -27,22 +27,22 @@ class join_institute:
             # Inserting a dummy public_page object for testing
             if(0):
                 temp_data = {"_id": ObjectId(), "page_title":"Begum Rokeya university", "description": "BRUR Description", "designation":[
-                    {"_id":ObjectId(), "title": "Parents", "tags":[
-                        {"_id":ObjectId(), "title": "Parents_Tag 1", "tasks":[
+                    {"_id":ObjectId(), "title": "parents", "tags":[
+                        {"_id":ObjectId(), "title": "parents_Tag 1", "tasks":[
                             {"_id":ObjectId(), "title": "tasks11"},
                             {"_id":ObjectId(), "title": "tasks12"}
                         ]},
-                        {"_id":ObjectId(), "title": "Parents_Tag 2", "tasks":[
+                        {"_id":ObjectId(), "title": "parents_Tag 2", "tasks":[
                             {"_id":ObjectId(), "title": "tasks21"},
                             {"_id":ObjectId(), "title": "tasks22"}
                         ]}
                     ]},
-                    {"_id":ObjectId(), "title": "Teacher", "tags":[
-                        {"_id":ObjectId(), "title": "Teacher_Tag 1", "tasks":[
+                    {"_id":ObjectId(), "title": "teacher", "tags":[
+                        {"_id":ObjectId(), "title": "teacher_Tag 1", "tasks":[
                             {"_id":ObjectId(), "title": "tasks11"},
                             {"_id":ObjectId(), "title": "tasks12"}
                         ]},
-                        {"_id":ObjectId(), "title": "Teacher_Tag 2", "tasks":[
+                        {"_id":ObjectId(), "title": "teacher_Tag 2", "tasks":[
                             {"_id":ObjectId(), "title": "tasks21"},
                             {"_id":ObjectId(), "title": "tasks22"}
                         ]}
@@ -54,7 +54,7 @@ class join_institute:
             ppageid = public_pages.find_one({"_id": ObjectId(public_page_id)})
             print(ppageid)
             if(ppageid is None):
-                this.response={"status_code":"page_not_found", "default_description":"no such thing exits in the system"}
+                self.response={"status_code":"page_not_found", "default_description":"no such thing exits in the system"}
                 return
 
             stored_designations = ppageid.get("designation") 
@@ -80,3 +80,5 @@ class join_institute:
             
 
             self.response={"s":"fail"}
+        else:
+            self.response = serializer.errors
