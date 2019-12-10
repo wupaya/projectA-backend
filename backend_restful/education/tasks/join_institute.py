@@ -26,7 +26,7 @@ class join_institute:
 
             # Inserting a dummy public_page object for testing
             if(1):
-                data = {"_id": ObjectId(), "page_title":"Begum Rokeya university", "description": "BRUR Description", "designation":[
+                temp_data = {"_id": ObjectId(), "page_title":"Begum Rokeya university", "description": "BRUR Description", "designation":[
                     {"_id":ObjectId(), "title": "Parents", "tags":[
                         {"_id":ObjectId(), "title": "Parents_Tag 1", "tasks":[
                             {"_id":ObjectId(), "title": "tasks11"},
@@ -48,12 +48,13 @@ class join_institute:
                         ]}
                     ]}
                 ]}
+                public_pages.insert_one(temp_data).inserted_id
 
             #query if already exist
-            ppageid = public_pages.find_one({"_id": ObjectId(id)})
+            ppageid = public_pages.find_one({"_id": ObjectId(public_page_id)})
             if(ppageid is None):
                 #return not found error and store ppageid
-                ppageid = public_pages.insert_one
+                ppageid = public_pages.insert_one(public_page_id)
                 return Response({"status_code":"page_not_found", "default_description":"no such thing exits in the system"}, status=status.HTTP_200_OK)
 
             stored_designations = ppageid.get("designation") 
