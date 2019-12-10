@@ -49,10 +49,11 @@ class join_institute:
                     ]}
                 ]}
                 page_id = public_pages.insert_one(temp_data).inserted_id
+                print(page_id)
 
             #query if already exist
             ppageid = public_pages.find_one({"_id": ObjectId(public_page_id)})
-            #print(page_id)
+            #pprint(ppageid)
             if(ppageid is None):
                 self.response={"status_code":"page_not_found", "default_description":"no such thing exits in the system"}
                 return
@@ -65,19 +66,15 @@ class join_institute:
                         matched_designations.append(designation)
             #this is to avoid ObjectId not serializer error
             #query_result["_id"] = user_id
-            associate_institute_document_object = { 
-                "_id":ObjectId(user_id),
-                "associated": [
-                {"_id": ObjectId(), "long_name": ppageid.get("page_title"), "description": ppageid.get("description"), "designations": matched_designations}]
-            }
+            associate_institute_document_object = {"_id": ObjectId(), "long_name": ppageid.get("page_title"), "description": ppageid.get("description"), "designations": matched_designations}
+
             #pprint("user id "+ user_id)
             res = education.update_one({"_id":ObjectId(user_id)}, {"$push": {"associated":associate_institute_document_object}}, upsert=True)
 
             #pprint(res)
-
             if res.matched_count>0:
                 self.response={"s":"success"}
-                
-            self.response={"s":"fail"}
+            else:
+                self.response={"s":"fail"}
         else:
             self.response = serializer.errors
