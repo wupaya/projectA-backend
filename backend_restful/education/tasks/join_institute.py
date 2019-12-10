@@ -48,11 +48,11 @@ class join_institute:
                         ]}
                     ]}
                 ]}
-                public_pages.insert_one(temp_data).inserted_id
+                page_id = public_pages.insert_one(temp_data).inserted_id
 
             #query if already exist
             ppageid = public_pages.find_one({"_id": ObjectId(public_page_id)})
-            print(ppageid)
+            #print(page_id)
             if(ppageid is None):
                 self.response={"status_code":"page_not_found", "default_description":"no such thing exits in the system"}
                 return
@@ -77,8 +77,7 @@ class join_institute:
 
             if res.matched_count>0:
                 self.response={"s":"success"}
-            
-
+                
             self.response={"s":"fail"}
         else:
             self.response = serializer.errors
