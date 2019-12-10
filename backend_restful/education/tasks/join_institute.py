@@ -23,20 +23,41 @@ class join_institute:
             education = db.education
             user_id = data.get("user_info")
             public_pages = db.public_pages
-            #query if already exist
-            ppageid = public_pages.find_one({"_id": ObjectId(public_page_id)})
 
+            # Inserting a dummy public_page object for testing
+            if(1):
+                data = {"_id": ObjectId(), "page_title":"Begum Rokeya university", "description": "BRUR Description", "designation":{
+                    {"_id": ObjectId(), "title":"parents", "tasks":
+                    {{
+                        {"_id": ObjectId()}
+                        {"title":"task11_name"}
+                    }
+                    {
+                        {"_id": ObjectId()}
+                        {"title":"task12_name"}
+                    }}}
+                    {"_id":ObjectId(), "title":"teacher","tasks":
+                    {{
+                        {"_id": ObjectId()}
+                        {"title":"task21_name"}
+                    }
+                    {
+                        {"_id": ObjectId()}
+                        {"title":"task22_name"}
+                    }}}}
+                
+
+            #query if already exist
+            ppageid = public_pages.find_one({"_id": ObjectId(id)})
             if(ppageid is None):
-            #return not found error
-            return Response({"status_code":"page_not_found", "default_description":"no such thing exits in the system"}, status=status.HTTP_200_OK)
+                #return not found error and store ppageid
+                ppageid = public_pages.insert_one
+                return Response({"status_code":"page_not_found", "default_description":"no such thing exits in the system"}, status=status.HTTP_200_OK)
 
             stored_designations = ppageid.get("designation") 
-            
             matched_designations = []
-
             for designations in incoming_designations:
                 for designation in stored_designations:
-
                     if(designations==designation):
                         matched_designations.append(designation)
             #this is to avoid ObjectId not serializer error
