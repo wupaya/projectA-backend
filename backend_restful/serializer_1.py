@@ -16,6 +16,7 @@ class LoginInputSerializer(serializers.Serializer):
     cookie = serializers.CharField(required=False)
 
 class PublicPageSerializer(serializers.Serializer):
+    page_type = serializers.CharField()
     page_title = serializers.CharField()
     type_of_institute = serializers.CharField()
     founding_date = serializers.CharField()

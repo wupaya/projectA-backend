@@ -3,17 +3,14 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from .serializer_1 import RegistrationSerializer, LoginInputSerializer, PublicPageSerializer, ServicesSerializer, ServiceRequestSerializer
 from .noyon import AvailableServices, SubscribedServices, PublicPage, ServiceRequest
-
 import pymongo
 from rest_framework.parsers import JSONParser
 from rest_framework.renderers import JSONRenderer
-import json
 from bson import json_util
-import jwt
+import jwt, json
 from datetime import datetime
 from rest_framework.authentication import SessionAuthentication, BasicAuthentication
 from rest_framework.permissions import IsAuthenticated
-
 from django.contrib.auth.models import User
 from rest_framework import authentication
 from rest_framework import HTTP_HEADER_ENCODING, exceptions
@@ -21,111 +18,12 @@ from django.utils.translation import gettext_lazy as _
 import importlib
 from pprint import pprint
 from bson.objectid import ObjectId
-
+from .helper import IsGetOrIsAuthenticated, TokenAuthentication, ExampleAuthentication
 
 mongodb_url = "mongodb+srv://anamika:1234@cluster0-t3qae.mongodb.net/test?retryWrites=true"
 jwt_secret = "secret"
 
-class ExampleAuthentication(authentication.BaseAuthentication):
-    def authenticate(self, request):
-        token = request.META.get('Authorization')
-        print(token)
-        # if not username:
-            # return None
-        try:
-            user = User.objects.get()
-        except User.DoesNotExist:
-            raise exceptions.AuthenticationFailed('No such user')
-        return (user, None)
-
-
-class TokenAuthentication(authentication.BaseAuthentication):
-    """
-    Simple token based authentication.
-    Clients should authenticate by passing the token key in the "Authorization"
-    HTTP header, prepended with the string "Token ".  For example:
-        Authorization: Token 401f7ac837da42b97f613d789819ff93537bee6a
-    """
-
-    keyword = 'Token'
-    model = None
-
-    def get_authorization_header(self, request):
-        """
-        Return request's 'Authorization:' header, as a bytestring.
-        Hide some test client ickyness where the header can be unicode.
-        """
-        auth = request.META.get('HTTP_AUTHORIZATION', b'')
-        if isinstance(auth, str):
-            # Work around django test client oddness
-            auth = auth.encode(HTTP_HEADER_ENCODING)
-        return auth
-
-    def get_model(self):
-        if self.model is not None:
-            return self.model
-        from rest_framework.authtoken.models import Token
-        print(Token)
-        return Token
-
-    """
-    A custom token model may be used, but must have the following properties.
-    * key -- The string identifying the token
-    * user -- The user to which the token belongs
-    """
-
-    def authenticate(self, request):
-        auth = self.get_authorization_header(request).split()
-
-        if not auth or auth[0].lower() != self.keyword.lower().encode():
-            return None
-
-        if len(auth) == 1:
-            msg = _('Invalid token header. No credentials provided.')
-            raise exceptions.AuthenticationFailed(msg)
-        elif len(auth) > 2:
-            msg = _('Invalid token header. Token string should not contain spaces.')
-            raise exceptions.AuthenticationFailed(msg)
-
-        try:
-            token = auth[1]
-        except Exception as e:
-            msg = _('Invalid token header. Token string should not contain invalid characters.')
-            raise exceptions.AuthenticationFailed(msg)
-
-        return self.authenticate_credentials(token)
-
-    def authenticate_credentials(self, key):
-        model = self.get_model()
-        try:
-            #token = model.objects.select_related('user').get(key=key)
-            token = jwt.decode(key, jwt_secret, algorithms=['HS256'])
-            user = User.objects.get()
-          
-        except Exception as e:
-            print(Exception)
-            raise exceptions.AuthenticationFailed(_('Invalid token.'))
-
-        # if not token.user.is_active:
-            # raise exceptions.AuthenticationFailed(_('User inactive or deleted.'))
-        return (user, token)
-
-    def authenticate_header(self, request):
-        return self.keyword
-
-
 class login(APIView):
-    
-    # def get(self,request):
-        # validate request data with serializer
-
-        # query database
-
-        # return error if not found
-
-        # return token
-
-        # return Response (serializer.data, status.HTTP_200_OK)
 
     def post(self, request, format=None):
         #validate input data with serializer
@@ -171,7 +69,6 @@ class login(APIView):
                 return Response({"status_code":"login_failed",
     "default_description":"user not found"}, status=status.HTTP_201_CREATED)
         return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-
 
 class register(APIView):
     
@@ -235,17 +132,8 @@ class service_request(APIView):
 class public_page(APIView):
 
     authentication_classes = [TokenAuthentication]
-    #permission_classes = [IsAuthenticated]
+    permission_classes = [IsGetOrIsAuthenticated]
 
-    # def get(self,request, your_message):
-        #validate pageid with serializer
-
-        #query database for page information
-
-        #return error if not found
-
-        #return details
-        # return Response ({"Message":your_message}, status.HTTP_200_OK)
     def get(self, request, pageid=None):
       if pageid is None:
         return Response({"error": "page_id_missing", "details":"page is missing"}, status.HTTP_200_OK)
@@ -253,17 +141,14 @@ class public_page(APIView):
       client = pymongo.MongoClient(mongodb_url)
       db = client.test
       collection = db.public_pages
-      #query if already exist
+      
       document = collection.find_one({"_id": ObjectId(public_page_id)})
 
       if(document is None):
         #return not found error
         return Response({"status_code":"not_found", "default_description":"no such thing exits in the system"}, status=status.HTTP_200_OK)
-      #serializer = PublicPageSerializer(PublicPage(document))
-      #import pprint
-      #pprint.pprint(document)
-      document["nuid"] = str(document["_id"])
-      del(document["_id"])
+
+      document = json.loads(json.dumps(document))
       document["lastest_events"] = [
         { "title": "News: CSE BRUR started using IMS system.", "details_link": "#" },
         { "title": "Event: Inter batch programming contest on sunday, 9th oct.", "details_link": "#" },
@@ -274,76 +159,31 @@ class public_page(APIView):
       return Response(document, status.HTTP_200_OK)
 
     def post(self, request, format=None):
-        #validate page create data
-        serializer = PublicPageSerializer(data=request.data)
+      #validate page create data
+      serializer = PublicPageSerializer(data=request.data)
 
-        #get user from session_id
-        
-        #store the data in database
-        if serializer.is_valid():
-            #serializer data for database
-            #database instance
-            client = pymongo.MongoClient(mongodb_url)
-            db = client.test
-            public_pages = db.public_pages
+      #store the data in database
+      if serializer.is_valid():
+          page_type = serializer.validated_data.get("page_type") #education
+          pkg = 'backend_restful.'+page_type+'.'+page_type
 
-            #query if already exist
-            found_page = public_pages.find_one({"page_title": serializer.validated_data.get("page_title")})
-            if(found_page is None):
-                #serializer.validated_data["_id"] = "brur"
-                post_id = public_pages.insert_one(serializer.validated_data).inserted_id
-                return Response({"status_code":"page_creation_successfull", "default_description":"successfully created page", "id": str(post_id)}, status=status.HTTP_200_OK)
-            else:
-                return Response({"status_code":"registration_failed", "default_description":"already exist", "id": str(found_page["_id"])}, status=status.HTTP_200_OK)
-        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-        #return status message
-
-class NoyonIOView(APIView):
-    def get(self,request):
-        #serializer = NoyonParameterInput(data=request.data)
-        #if serializer.is_valid():
-
-        num1 = request.query_params.get('num1', None)
-        num2 = request.query_params.get('num2', None)
-        nio = NoyonIO.give_me_sum(num1,num2)
-        if num1 is not None and num1.isnumeric() and num2 is not None and num2.isnumeric():
-            #nio = NoyonIO.filter(give_me_sum(int(num1),int(num2))
-            nio = nio.filter(num1+num2)
-        return nio
-
-    def post(self,request):
-        serializer = NoyonParameterInput(data=request.data)
-        if serializer.is_valid():
-            nio = NoyonIO()
-            nio.sum = nio.give_me_sum(serializer.validated_data.get('num1'),serializer.validated_data.get('num2'))
-            return Response(NoyonParameterOutput(nio).data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
+          #loading task handler module dynamically
+          task_handler_object = getattr(importlib.import_module(pkg), "Process")
+          task= {
+                "task_id": "create_public_page",
+                "data": serializer.validated_data
+          }
+          # try:
+          #process task and return response
+          data = task
+          data["user_info"] = request.auth["user"]
+          response = task_handler_object(task).response
+          return Response(response, status.HTTP_200_OK)
+          # except Exception as e:
+          #   return Response({"error": str(e)}, status.HTTP_200_OK)
+      return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
 
 class Search(APIView):
-    '''need password'''
-    pass
-
-class Registration(APIView):
-    def get(self, request):
-        serializer = RegistrationSerializer(data=request.data)
-        user = User()
-        #suppose u read the following data from database and u assign them to the user object
-        user.email = "example@domain.com"
-        user.password = "password12@#"
-        user.username = "name123"
-        user.name = "Mr. Name"
-        user.phone_no = "+1847439202"
-        return Response(RegistrationSerializer(user).data, status=status.HTTP_201_CREATED)
-
-    def post(self,request):
-        serializer = RegistrationSerializer(data=request.data)
-        if serializer.is_valid():
-            #user = User()
-            #TODO store data in database
-            return Response ({"Registratiion Successfull"}, status.HTTP_200_OK)
-        return Response(serializer.errors,status=status.HTTP_400_BAD_REQUEST)
-
-
     '''need password'''
     pass
 
