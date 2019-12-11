@@ -2,7 +2,7 @@
 /login
 ==========
 
-user will provide email and password and get a session token on match
+User will provide email and password and get a session token on match
 
 * **URL**
 
@@ -17,27 +17,35 @@ user will provide email and password and get a session token on match
 no ulr params
 
 * **Data Params**
-
-**Required:**
-
-`email=[string]`
-`password=[string]`
-
-* **Success Response:**
-
-* **status_code:** login_successfull <br />
-* **default_description:** successfully registered <br />
-* **data:**
 .. code-block:: JSON
 
   {
-    "token": "eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoiNWQ1YWU0MjExMzYxNGI0ZjcxODU2ZmQ5Iiwic2Vzc2lvbl9pZCI6IjVkNjBiYzE2Zjc1ZjhkZjcxYzQxYmE2YSJ9.ngxcHBHQ9NZQlIT9VKRgUEuGxiyvBl-WRRr7N2sKjYg"
+    "email" : "// the registered email address of the user, type: string, required",
+    "password" : "// the corresponding password of the user, type: string, required"
   }
 
-* **Error Response:**
+* **Success Responses:**
 
-**status_code:** login_failed <br />
-    **default_description:** user not found
+  **HTTP Status Code: 200**
+
+  **Response Object:**
+.. code-block:: JSON
+
+  {
+      "token": "//session token, type: string"
+  }
+
+* **Error Responses:**
+
+  **HTTP Status Code: 200**
+  
+  **Response Object:**
+.. code-block:: JSON
+
+  {
+      "status": "//user_not_found when user not found, use this to show custom message1, type: string",
+      "description": "short description, type string"
+  }
 
 * **Sample Call:**
 .. code-block:: javascript
@@ -52,7 +60,3 @@ no ulr params
       console.log(r);
   }
   });
-
-* **Notes:**
-
-It's still under development

@@ -56,3 +56,8 @@ OR
 * **Notes:**
 
 <_This is where all uncertainties, commentary, discussion etc. can go. I recommend timestamping and identifying oneself when leaving comments here._>
+.. toctree::
+   :maxdepth: 2
+   :caption: Database Index:
+
+   edu_service/service_requests/service_request
