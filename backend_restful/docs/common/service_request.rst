@@ -78,6 +78,6 @@ no ulr params
 
 .. toctree::
    :maxdepth: 2
-   :caption: Database Index:
+   :caption: Tasks Index:
 
-   ../edu_service/service_requests/service_request
+   ../edu_service/edu_service_tasks
