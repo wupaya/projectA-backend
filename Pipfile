@@ -5,6 +5,7 @@ verify_ssl = true
 
 [dev-packages]
 pylint = "*"
+black = "*"
 
 [packages]
 certifi = "==2018.11.29"
@@ -19,3 +20,6 @@ django = "*"
 pymongo = "*"
 dnspython = "*"
 starlette-jwt = "*"
+
+[pipenv]
+allow_prereleases = true

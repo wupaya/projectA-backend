@@ -2,7 +2,7 @@
 /login
 ==========
 
-user will provide email and password and get a session token on match
+User will provide email and password and get a session token on match
 
 * **URL**
 
@@ -17,38 +17,63 @@ user will provide email and password and get a session token on match
 no ulr params
 
 * **Data Params**
+.. code-block:: JSON
 
-**Required:**
+  {
+    "email" : "// the registered email address of the user, type: string, required",
+    "password" : "// the corresponding password of the user, type: string, required"
+  }
 
-`email=[string]`
-`password=[string]`
+* **Success Responses:**
 
-* **Success Response:**
+  **HTTP Status Code: 200**
 
-* **status_code:** login_successfull <br />
-* **default_description:** successfully registered <br />
-**data:** `{'token': b'eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyIjoiNWQ1YWU0MjExMzYxNGI0ZjcxODU2ZmQ5Iiwic2Vzc2lvbl9pZCI6IjVkNjBiYzE2Zjc1ZjhkZjcxYzQxYmE2YSJ9.ngxcHBHQ9NZQlIT9VKRgUEuGxiyvBl-WRRr7N2sKjYg'}`
+  **Response Object:**
+.. code-block:: JSON
 
-* **Error Response:**
+  {
+    "status_code":"login_successfull",
+    "default_description":"Login Successfull",
+    "data": {
+      "token": "//session token, type: string",
+      "subscribed_services": ["//a list of services subscribed by the user, type: string"
+          {
+            "service_id" : "//an id in the system for this service, type: string",
+            "title": "//A title of the service, type: string",
+            "short_updates": "//a short description with lastest update, type: string"
+          }
+      ],
+      "recent_tasks": ["//a list of recents tasks"
+          {
+            "title": "//title of the task, type: string",
+            "link": "//a link for the task, type: string"
+          }
+      ]
+    }
+  }
 
-**status_code:** login_failed <br />
-    **default_description:** user not found
+* **Error Responses:**
+
+  **HTTP Status Code: 200**
+  
+  **Response Object:**
+.. code-block:: JSON
+
+  {
+      "status": "//user_not_found when user not found, use this to show custom message1, type: string",
+      "description": "short description, type string"
+  }
 
 * **Sample Call:**
+.. code-block:: javascript
 
-```javascript
-$.ajax({
-url: "/login",
-dataType: "json",
-type : "POST",
-contentType: 'application/json',
-data: JSON.stringify( { "email": "mhsn06@gmail.com", "password": "1234" }),
-success : function(r) {
-    console.log(r);
-}
-});
-```
-
-* **Notes:**
-
-It's still under development
+  $.ajax({
+  url: "/login",
+  dataType: "json",
+  type : "POST",
+  contentType: 'application/json',
+  data: JSON.stringify( { "email": "mhsn06@gmail.com", "password": "1234" }),
+  success : function(r) {
+      console.log(r);
+  }
+  });
