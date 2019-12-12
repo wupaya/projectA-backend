@@ -66,6 +66,7 @@ class join_institute:
                         matched_designations.append(designation)
             #this is to avoid ObjectId not serializer error
             #query_result["_id"] = user_id
+            print(matched_designations)
             associate_institute_document_object = {"_id": ObjectId(), "long_name": ppageid.get("page_title"), "description": ppageid.get("description"), "designations": matched_designations}
 
             #pprint("user id "+ user_id)
