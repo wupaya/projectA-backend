@@ -2,57 +2,71 @@
 get_associated_institues
 ==========
 
-<_Additional information about your API call. Try to use verbs that match both request type (fetching vs modifying) and plurality (one vs multiple)._>
+It return a list of associated institutes for the user
 
-* **URL**
-
-<_The URL Structure (path only, no root url)_>
-
-* **Method:**
-
-<_The request type_>
-
-`GET` | `POST` | `HEAD` | `OPTIONS`
 
 *  **URL Params**
 
-<_If URL params exist, specify them in accordance with name mentioned in URL section. Separate into optional and required. Document data constraints._>
-
-**Required:**
-
-`id=[integer]`
-
-**Optional:**
-
-`photo_id=[alphanumeric]`
+No url params
 
 * **Data Params**
+.. code-block:: JSON
 
-<_If making a post request, what should the body payload look like? URL Params rules apply here too._>
+  {
+    "task_id" : "get_associated_institues",
+    "data" : {
+        "institute_id":"//the id of the institute the user want to join, type string",
+        "designations":"//the name of the designations user want to associate, type array of string",
+    }
+  }
 
 * **Success Response:**
 
-<_What should the status code be on success and is there any returned data? This is useful when people need to to know what their callbacks should expect!_>
+When successfully stored associations data in database
 
-* **Code:** 200 <br />
-**Content:** `{ id : 12 }`
+* **Code:** 200
+* **Content:**
+.. code-block:: JSON
+
+  {
+    "...":"//click the appropriate task name for the response params"
+  }
 
 * **Error Response:**
 
-<_Most endpoints will have many ways they can fail. From unauthorized access, to wrongful parameters etc. All of those should be liste d here. It might seem repetitive, but it helps prevent assumptions from being made where they should be._>
+When failed to store associations
 
-* **Code:** 401 UNAUTHORIZED <br />
-**Content:** `{ error : "Noyon4View" }`
+* **Code:** 200
+* **Content:**
+.. code-block:: JSON
 
-OR
-
-* **Code:** 422 UNPROCESSABLE ENTRY <br />
-**Content:** `{ error : "Can't Connect to server" }`
+  {
+    "...":"//click the appropriate task name for the response params"
+  }
 
 * **Sample Call:**
+.. code-block:: javascript
 
-<_Just a sample call to your endpoint in a runnable format ($.ajax call or a curl request) - this makes life easier and more predictable._>
+  $.ajax({
+  url: "/service_request",
+  dataType: "json",
+  type : "POST",
+  contentType: 'application/json',
+  beforeSend: function (xhr) {
+    xhr.setRequestHeader ("Authorization", "Token " + "<your token here>");
+  },
+  data: JSON.stringify({
+    "service_name": "education",
+    "task": {
+    	"task_id": "tasks",
+    	"data": {}	
+    }
+  }),
+  success : function(r) {
+      console.log(r);
+  }
+  });
 
 * **Notes:**
 
-<_This is where all uncertainties, commentary, discussion etc. can go. I recommend timestamping and identifying oneself when leaving comments here._>
+No additional notes
