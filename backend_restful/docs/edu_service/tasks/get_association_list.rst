@@ -14,23 +14,32 @@ No url params
 
   {
     "task_id" : "get_associated_institues",
-    "data" : {
-        "institute_id":"//the id of the institute the user want to join, type string",
-        "designations":"//the name of the designations user want to associate, type array of string",
-    }
+    "data" : {} //An empty object
   }
 
 * **Success Response:**
 
-When successfully stored associations data in database
+Return a list of associated institutes
 
 * **Code:** 200
 * **Content:**
 .. code-block:: JSON
 
-  {
-    "...":"//click the appropriate task name for the response params"
-  }
+    {
+        "associated": [
+            {
+                "_id": "//id of the institute",
+                "short_name": "//short name of the institute",
+                "long_name": "long name of the institute",
+                "designations": [
+                    {
+                        "_id": "//if of the designation",
+                        "title": "//title of the designation"
+                    }
+                ]
+            }
+        ]
+    }
 
 * **Error Response:**
 
@@ -58,8 +67,8 @@ When failed to store associations
   data: JSON.stringify({
     "service_name": "education",
     "task": {
-    	"task_id": "tasks",
-    	"data": {}	
+        "task_id": "get_associated_institues",
+        "data": {}
     }
   }),
   success : function(r) {
