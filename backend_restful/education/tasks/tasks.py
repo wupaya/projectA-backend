@@ -24,7 +24,6 @@ class tasks:
               "_id" : ObjectId(user_id)
               }
             )
-        #filter results here
 
         print("showing results")
         pprint(query_result)
