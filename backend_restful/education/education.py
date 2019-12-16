@@ -1,5 +1,5 @@
 import importlib
-
+from backend_restful.DBHandler import DBHandler
 mongodb_url = "mongodb+srv://anamika:1234@cluster0-t3qae.mongodb.net/test?retryWrites=true"
 
 class Process:

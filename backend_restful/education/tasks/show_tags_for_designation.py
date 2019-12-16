@@ -1,16 +1,15 @@
 from backend_restful.db import users
+from backend_restful.DBHandler import DBHandler
 import pymongo
 from bson.objectid import ObjectId
 from pprint import pprint
-
-mongodb_url = "mongodb+srv://anamika:1234@cluster0-t3qae.mongodb.net/test?retryWrites=true"
 
 class dashboard:
     response = {}
     def __init__(self, data={}):
         #query database for dashboard info
         #str(users.find_one({"$and":[{"email": "mhsn06@gmail.com"},{"password": "1234"}]}))
-        client = pymongo.MongoClient(mongodb_url)
+        client = DBHandler.get_database_client()
         db = client.test
         education = db.education
         user_id = data.get("user_info")

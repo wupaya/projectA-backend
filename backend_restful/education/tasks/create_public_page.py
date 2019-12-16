@@ -1,10 +1,9 @@
 from backend_restful.db import users
+from backend_restful.DBHandler import DBHandler
 import pymongo
 from bson.objectid import ObjectId
 from pprint import pprint
 from rest_framework import serializers
-
-mongodb_url = "mongodb+srv://anamika:1234@cluster0-t3qae.mongodb.net/test?retryWrites=true"
 
 class create_public_page:
     response = {}
@@ -14,7 +13,7 @@ class create_public_page:
 
         if serializer.is_valid():
             #query database 
-            client = pymongo.MongoClient(mongodb_url)
+            client = DBHandler.get_database_client()
             db = client.test
             public_pages = db.public_pages
             #user_id = data.get("user_info")
