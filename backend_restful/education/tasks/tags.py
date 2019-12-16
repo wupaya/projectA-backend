@@ -1,11 +1,9 @@
 from backend_restful.db import users
-import pymongo
+from backend_restful.DBHandler import DBHandler
 from bson.objectid import ObjectId
 from pprint import pprint
 from rest_framework import serializers
 import json
-
-mongodb_url = "mongodb+srv://anamika:1234@cluster0-t3qae.mongodb.net/test?retryWrites=true"
 
 class TagSerializer(serializers.Serializer):
     associated = serializers.CharField()
@@ -19,7 +17,7 @@ class tags:
         serializer = TagSerializer(data=data)
         if serializer.is_valid():
             #query database for dashboard info
-            client = pymongo.MongoClient(mongodb_url)
+            client = DBHandler.get_database_client()
             db = client.test
             education = db.education
             user_id = data.get("user_info")
