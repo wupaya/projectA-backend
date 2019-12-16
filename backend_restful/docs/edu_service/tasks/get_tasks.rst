@@ -28,7 +28,22 @@ No url params
 .. code-block:: JSON
 
   {
-    "...":"TODO"
+    "_id": "5ddd62ffd8639286d599dcd8",
+    "title": "",
+    "tasks": [
+        {
+            "_id": "5ddd62ffd8639286d599dcd9",
+            "title": ""
+        },
+        {
+            "_id": "5ddd62ffd8639286d599dcda",
+            "title": ""
+        },
+        {
+            "_id": "5ddd62ffd8639286d599dcdb",
+            "title": ""
+        }
+    ]
   }
 
 * **Error Response:**

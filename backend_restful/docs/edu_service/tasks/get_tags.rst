@@ -28,7 +28,18 @@ When successfully stored associations data in database
 .. code-block:: JSON
 
   {
-    "...":"TODO"
+    "_id": "5ddd62ffd8639286d599dcd7",
+    "title": "Parent",
+    "tags": [
+        {
+            "_id": "5ddd62ffd8639286d599dcd8",
+            "title": ""
+        },
+        {
+            "_id": "5ddd62ffd8639286d599dcdc",
+            "title": ""
+        }
+    ]
   }
 
 * **Error Response:**
