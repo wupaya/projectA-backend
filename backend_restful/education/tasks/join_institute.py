@@ -1,6 +1,5 @@
 from backend_restful.db import users
 from backend_restful.DBHandler import DBHandler
-import pymongo
 from rest_framework import serializers
 from bson.objectid import ObjectId
 from pprint import pprint
