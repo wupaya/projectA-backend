@@ -1,9 +1,13 @@
 from backend_restful.db import users
 from backend_restful.DBHandler import DBHandler
 import pymongo
+from rest_framework import serializers
 from bson.objectid import ObjectId
 from pprint import pprint
-from .task_serializer import JoinInstituteSerializer
+
+class JoinInstituteSerializer(serializers.Serializer):
+    institute_id = serializers.CharField()
+    designations = serializers.ListField()
 
 class join_institute:
     response = {}
