@@ -62,11 +62,14 @@ class join_institute:
             matched_designations = []
             for designations in incoming_designations:
                 for designation in stored_designations:
-                    if(designations==designation):
+                    #pprint(designation)
+                    if(designations==designation["title"]):
                         matched_designations.append(designation)
             #this is to avoid ObjectId not serializer error
             #query_result["_id"] = user_id
-            print(matched_designations)
+            #pprint(stored_designations)
+            pprint(matched_designations)
+            #print(incoming_designations)
             associate_institute_document_object = {"_id": ObjectId(), "long_name": ppageid.get("page_title"), "description": ppageid.get("description"), "designations": matched_designations}
 
             #pprint("user id "+ user_id)
