@@ -1,5 +1,4 @@
 from rest_framework import serializers
-from .my_app import SignupRequest
         
 class SignUpInputDataSerializer(serializers.Serializer):
     email = serializers.CharField(required=True)
