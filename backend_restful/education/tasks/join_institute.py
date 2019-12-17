@@ -1,4 +1,3 @@
-from backend_restful.db import users
 from backend_restful.DBHandler import DBHandler
 from rest_framework import serializers
 from bson.objectid import ObjectId
