@@ -10,7 +10,7 @@ system requirement:
     1. user enter contact info phone no, name, and prefered designation
     2. system send short message with instruction to register and join
     3. Invited user enter necessary info to the system 
-    4. System generate an invitation verification code who sent invitation
+    4. System generate an invitation verification  for who sent invitation
     5. Invited user collect verification code over phone/visit to office/email or by any means
     6. Invited user enter the code to the system and verified
 

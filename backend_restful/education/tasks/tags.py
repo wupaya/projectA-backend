@@ -1,4 +1,3 @@
-from backend_restful.db import users
 from backend_restful.DBHandler import DBHandler
 from bson.objectid import ObjectId
 from pprint import pprint
