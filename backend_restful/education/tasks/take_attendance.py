@@ -17,28 +17,15 @@ class take_attendance:
         client = DBHandler.get_database_client()
         db = client.test
 
-        attendance_history_object = {
-            "association_id":"",
-            "year":[
-                {
-                    "month":[
-                        {
-                            "days": [
-                                {
-                                    "association_id": "",
-                                    "statues": "present"                                    
-                                }
-                            ]
-                        }
-                    ]
-                }
-            ],
-            "":"",
-            "":"",
-            "":""
+        attendance_object = {
+            "association_id": "",
+            "year": "",
+            "month": "",
+            "day": "",
+            "status": "",
         }
 
-        self.response = {"res": db.attendance.insert_one({"test":"working!"}).inserted_id}
+        self.response = {"res": db.attendance.insert_one(attendance_object).inserted_id}
         #serialize data
         #perform mass store query in student_attendance_history and attendance_statistics collection
         #return store status
