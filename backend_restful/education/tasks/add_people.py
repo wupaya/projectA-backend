@@ -70,12 +70,20 @@ class add_people:
                     if(designations==designation["title"]):
                         matched_designations.append(designation)
                     else:
-                        matched_designations.append(designations)
+                        matched_designations.append({
+                            "title": designations,
+                            "meta_data":{
+                                "roll": 1234,
+                                "class": 10,
+                                "session": "2011-12"
+                                }
+                            })
 
             
 
             associate_institute_document_object = {
                 "_id": ObjectId(),
+                "institute_id": ppageid.get("_id"),
                 "long_name": ppageid.get("page_title"),
                 "description": ppageid.get("description"),
                 "designations": matched_designations,
