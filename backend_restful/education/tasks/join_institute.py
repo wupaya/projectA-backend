@@ -71,7 +71,12 @@ class join_institute:
             #pprint(stored_designations)
             pprint(matched_designations)
             #print(incoming_designations)
-            associate_institute_document_object = {"_id": ObjectId(), "long_name": ppageid.get("page_title"), "description": ppageid.get("description"), "designations": matched_designations}
+            associate_institute_document_object = {
+                "_id": ObjectId(),
+                "long_name": ppageid.get("page_title"),
+                "description": ppageid.get("description"),
+                "designations": matched_designations
+            }
 
             #pprint("user id "+ user_id)
             res = education.update_one({"_id":ObjectId(user_id)}, {"$push": {"associated":associate_institute_document_object}}, upsert=True)

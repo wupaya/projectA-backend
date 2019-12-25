@@ -1,7 +1,7 @@
 from backend_restful.DBHandler import DBHandler
 from bson.objectid import ObjectId
 from pprint import pprint
-from rest_framework import serializers
+from rest_framework import serializers 
 
 
 '''
@@ -121,6 +121,6 @@ class add_people:
 
 class AddPeopleSerializer(serializers.Serializer):
     phone_no = serializers.CharField()
-    name = serializers.CharField()
     institute_id = serializers.CharField()
     designations = serializers.ListField(child=serializers.CharField())
+    designations2 = serializers.ListField(child=serializers.JSONField())
