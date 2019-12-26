@@ -23,5 +23,5 @@ class list_recieved_invitations:
                 "invitations" : 1
             }
             )
-             self.response=json.loads(json.dumps(query_result, default=str))
+        self.response=json.loads(json.dumps(query_result, default=str))
              
