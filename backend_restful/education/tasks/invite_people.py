@@ -7,7 +7,7 @@ from random import randint
 class InvitePeopleSerializer(serializers.Serializer):
     phone_no = serializers.CharField()
     institute_id = serializers.CharField()
-    designation = serializers.ListField()
+    designations = serializers.ListField()
 
 class invite_people:
     response = {}
@@ -25,8 +25,7 @@ class invite_people:
             user_id = data.get("user_info")
             users = db.users
 
-            serched_phone_number = user_id.find_one(
-                {"_id": ObjectId(users_incoming_phone_no)})
+            serched_phone_number = users.find_one(users_incoming_phone_no)
 
             if(serched_phone_number is None):
                 # todo store user phon
@@ -39,13 +38,14 @@ class invite_people:
                     "expired_date": datetime.now()+timedelta(hours=48),
                     "invitation_from": user_id,
                     "institute_id": serializer.validated_data.get("institute_id"),
-                    "designations": serializer.validated_data.get("designation"),
+                    "designations": serializer.validated_data.get("designations"),
                     "verification_code": randint(1000, 9999)  
                 }
-                res = education.update_one({"_id": ObjectId(user_id)}, {"$push":
+                print(new_user_id)
+                res = education.update_one({"_id": ObjectId(new_user_id)}, {"$push":
                 {"invitations":invitation_document_object}}, upsert=True)
 
-                invitation_id = education.find_one({"_id": ObjectId(invitation_document_object)
+                invitation_id = education.find_one({"_id": ObjectId(invitation_document_object)})
 
                 #sms queue collection
                 sms_queue = db.sms_queue
