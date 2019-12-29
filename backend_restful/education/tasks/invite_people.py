@@ -26,7 +26,7 @@ class invite_people:
             user_id = data.get("user_info")
             users = db.users
 
-            serched_phone_number = users.find_one(users_incoming_phone_no)
+            serched_phone_number = users.find_one({"phone_no":users_incoming_phone_no})
 
             if(serched_phone_number is None):
                 # todo store user phon
@@ -50,7 +50,7 @@ class invite_people:
 
             invitation_id = education.find_one({"_id":ObjectId(new_user_id)})
             pprint(invitation_id)
-            #pprint(invitation_document_object)
+            pprint(res.modified_count)
             
             #sms queue collection
             sms_queue = db.sms_queue
