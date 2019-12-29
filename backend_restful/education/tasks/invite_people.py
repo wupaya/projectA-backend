@@ -4,18 +4,16 @@ from datetime import datetime, timedelta
 from bson.objectid import ObjectId
 from random import randint
 
-
 class InvitePeopleSerializer(serializers.Serializer):
-    phone_no = serializers.IntgerField()
+    phone_no = serializers.CharField()
     institute_id = serializers.CharField()
     designation = serializers.ListField()
-
 
 class invite_people:
     response = {}
 
     def __init__(self, data={}):
-        serializer = InvitePeopleSerializer(data=data):
+        serializer = InvitePeopleSerializer(data=data)
         if serializer.is_valid():
             users_incoming_phone_no = serializer.validated_data.get("phone_no")
 
@@ -45,15 +43,16 @@ class invite_people:
                     "verification_code": randint(1000, 9999)  
                 }
                 res = education.update_one({"_id": ObjectId(user_id)}, {"$push":
-                {"invitation":invitation_document_object}}, upsert=True)
+                {"invitations":invitation_document_object}}, upsert=True)
 
                 invitation_id = education.find_one({"_id": ObjectId(invitation_document_object)
 
                 #sms queue collection
                 sms_queue = db.sms_queue
-                sms_queue.insert_one({"_id":ObjectId(), "invitation_id": invitation_id, "send_status": "pending"})
+                sms_id = sms_queue.insert_one({"_id":ObjectId(), "invitation_id": invitation_id, "send_status": "pending"}).inserted_id
 
-                self.response = {"success"}
+                self.response = {"s":"success"}
+            else:
+                self.response = {"message": "something went wrong"}
         else:
             self.response = serializer.errors
-
