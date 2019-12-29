@@ -48,9 +48,10 @@ class invite_people:
             res = education.update_one({"_id": ObjectId(new_user_id)}, {"$push":
             {"invitations":invitation_document_object}}, upsert=True)
 
-            invitation_id = education.find_one(invitation_document_object.get("_id"))
-
-            pprint(invitation_document_object)
+            invitation_id = education.find_one({"_id":ObjectId(new_user_id)})
+            pprint(invitation_id)
+            #pprint(invitation_document_object)
+            
             #sms queue collection
             sms_queue = db.sms_queue
             sms_id = sms_queue.insert_one({"_id":ObjectId(), "invitation_id": invitation_id, "send_status": "pending"}).inserted_id
