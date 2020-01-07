@@ -32,7 +32,7 @@ class validate_received_invitation:
                         #print(searched_institute_id)
                         invited_designation = stored_invitation.get("designations")
                         ppage_designation = searched_institute_id.get("designation")
-                        print(ppage_designation)
+                        #print(ppage_designation)
                         matched_designations = []
 
                         for p_designation in ppage_designation:
@@ -47,7 +47,7 @@ class validate_received_invitation:
                             "designations":matched_designations
                         }
 
-                        res = education.insert_one({"_id":ObjectId(user_id)}, {"$push": {"associated":associate_institute_document_object}}, upsert=True)
+                        res = education.insert_one({"_id":ObjectId(user_id)}, {"$push": {"associated":associate_institute_document_object}})
 
                         tags = []
                         for designation in  matched_designations:
