@@ -1,6 +1,6 @@
 from rest_framework import serializers
 from bson.objectid import ObjectId
-from backend_restful import DBHandler
+from backend_restful.DBHandler import DBHandler
 import json
 class IncomiingDataSerializer(serializers.Serializer):
     verification_code = serializers.IntegerField()
@@ -18,18 +18,20 @@ class validate_received_invitation:
             #searched_invitation = education.find_one({"_id":ObjectId(serializer.validated_data.get("invitation_id"))})
             #searched_user_id = education.find_one({"_id":ObjectId(user_id)})
             searched_user_id = education.find_one({"_id":ObjectId("5e08ce2ffebc801b83cd2579")})
+            #print(searched_user_id)
             invitation_list = searched_user_id.get("invitations")
             incoming_invitation_id = serializer.validated_data.get("invitation_id")
 
             for stored_invitation in invitation_list:
                 if(str(stored_invitation["_id"]) == incoming_invitation_id):
                     if(serializer.validated_data.get("verification_code") == stored_invitation.get("verification_code")):
+                        #print(stored_invitation)
                         institute_id = stored_invitation.get("institute_id")
-                        searched_institute_id = public_pages.find_one({"institute_id"})
-
+                        #institute_id = "5df85e5f8b98b8fc21f45162"
+                        searched_institute_id = public_pages.find_one({"_id":ObjectId(institute_id)})
+                        print(searched_institute_id)
                         invited_designation = stored_invitation.get("designations")
                         ppage_designation = searched_institute_id.get("designations")
-
                         matched_designations = []
 
                         for p_designation in ppage_designation:
