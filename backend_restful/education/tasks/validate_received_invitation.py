@@ -23,6 +23,9 @@ class validate_received_invitation:
             incoming_invitation_id = serializer.validated_data.get("invitation_id")
 
             for stored_invitation in invitation_list:
+                #print(stored_invitation)
+                #print(incoming_invitation_id)
+                #print(str(stored_invitation["_id"]))
                 if(str(stored_invitation["_id"]) == incoming_invitation_id):
                     if(serializer.validated_data.get("verification_code") == stored_invitation.get("verification_code")):
                         #print(stored_invitation)
@@ -36,9 +39,11 @@ class validate_received_invitation:
                         matched_designations = []
 
                         for p_designation in ppage_designation:
+                            #print(p_designation)
                             for i_designation in invited_designation:
-                                if (i_designation == p_designation):
-                                    matched_designations.append(i_designation)
+                                #print(i_designation)
+                                if (i_designation == p_designation.get("title")):
+                                    matched_designations.append(p_designation)
 
                         associate_institute_document_object = {
                             "institute_id": searched_institute_id,
@@ -47,14 +52,16 @@ class validate_received_invitation:
                             "designations":matched_designations
                         }
 
-                        res = education.insert_one({"_id":ObjectId(user_id)}, {"$push": {"associated":associate_institute_document_object}})
-
+                        res = education.update_one({"_id":ObjectId(user_id)}, {"$push": {"associated":associate_institute_document_object}}, upsert=True)
+                        
+                        #print(matched_designations)
                         tags = []
                         for designation in  matched_designations:
                             tags.append(designation.get("tags"))
-
+                            
                         if res.matched_count>0:
                             self.response= json.loads(json.dumps(tags,default=str))
+                            return
                         else:
                             self.response={"message":"something went wrong"}
                     else:
