@@ -29,9 +29,10 @@ class validate_received_invitation:
                         institute_id = stored_invitation.get("institute_id")
                         #institute_id = "5df85e5f8b98b8fc21f45162"
                         searched_institute_id = public_pages.find_one({"_id":ObjectId(institute_id)})
-                        print(searched_institute_id)
+                        #print(searched_institute_id)
                         invited_designation = stored_invitation.get("designations")
-                        ppage_designation = searched_institute_id.get("designations")
+                        ppage_designation = searched_institute_id.get("designation")
+                        print(ppage_designation)
                         matched_designations = []
 
                         for p_designation in ppage_designation:
