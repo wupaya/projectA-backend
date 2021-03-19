@@ -10,7 +10,7 @@ black = "*"
 [packages]
 certifi = "==2018.11.29"
 django-cors-headers = "==2.4.0"
-djangorestframework = "==3.9.0"
+djangorestframework = "==3.11.2"
 pipenv = "==2018.11.26"
 pytz = "==2018.9"
 virtualenv = "==16.3.0"
